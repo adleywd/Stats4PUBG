@@ -1,4 +1,4 @@
-package br.com.adley.pubgstats.models;
+package br.com.adley.pubgstats.data;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

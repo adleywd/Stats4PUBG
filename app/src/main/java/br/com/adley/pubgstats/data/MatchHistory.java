@@ -1,4 +1,4 @@
-package br.com.adley.pubgstats.models;
+package br.com.adley.pubgstats.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
