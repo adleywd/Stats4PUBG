@@ -9,6 +9,7 @@ import retrofit2.http.Path;
 /**
  * Created by Adley.Damaceno on 20/09/2017.
  * API Interface
+ * Define methods available
  */
 
 public interface PBTService {

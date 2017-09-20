@@ -5,7 +5,7 @@ import br.com.adley.pubgstats.data.remote.RetrofitClient;
 
 /**
  * Created by Adley.Damaceno on 20/09/2017.
- *
+ * Defines the BASE Url.
  */
 
 public class ApiUtils {
