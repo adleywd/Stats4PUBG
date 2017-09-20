@@ -64,7 +64,7 @@ public class MatchHistory {
     private int headshots;
     @SerializedName("Kd")
     @Expose
-    private int kd;
+    private double kd;
     @SerializedName("Damage")
     @Expose
     private int damage;
@@ -251,11 +251,11 @@ public class MatchHistory {
         this.headshots = headshots;
     }
 
-    public int getKd() {
+    public double getKd() {
         return kd;
     }
 
-    public void setKd(int kd) {
+    public void setKd(double kd) {
         this.kd = kd;
     }
 
