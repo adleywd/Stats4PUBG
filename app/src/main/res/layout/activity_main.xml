@@ -33,11 +33,34 @@
             android:text="@string/label_input_nickname"
             android:layout_marginStart="10dp"/>
 
+        <RadioGroup
+            android:id="@+id/radio_choice_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/label_player_nickname">
+
+            <RadioButton
+                android:id="@+id/radio_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Nickname" />
+
+            <RadioButton
+                android:id="@+id/radio_steamid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SteamID" />
+        </RadioGroup>
+
         <RelativeLayout
             android:id="@+id/input_player_nickname_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/label_player_nickname">
+            android:layout_below="@+id/radio_choice_search"
+            tools:layout_editor_absoluteY="0dp"
+            tools:layout_editor_absoluteX="0dp">
 
             <EditText
                 android:id="@+id/input_player_nickname"
@@ -59,15 +82,67 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/input_player_nickname_layout">
+            android:layout_below="@+id/input_player_nickname_layout"
+            tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="8dp">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/player_resume_stats_recycler_view"
+            <android.support.v7.widget.CardView
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/txtMatchesPlayed"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/txtWins"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/txtTop10"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/txtKills"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/txtKd"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/txtHeals"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </RelativeLayout>
 

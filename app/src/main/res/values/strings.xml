@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">PUBG-Stats</string>
     <string name="search_button">Search</string>
-    <string name="label_input_nickname">PUBG Nickname:</string>
+    <string name="label_input_nickname">PUBG-Stats:</string>
 </resources>

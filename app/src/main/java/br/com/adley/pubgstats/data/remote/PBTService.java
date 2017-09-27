@@ -5,6 +5,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Adley.Damaceno on 20/09/2017.
@@ -13,11 +14,12 @@ import retrofit2.http.Path;
  */
 
 public interface PBTService {
-    @Headers("TRN-Api-Key: ea4f1d45-473b-4925-90cb-d0e276339822")
+    String API_KEY = "TRN-Api-Key:ea4f1d45-473b-4925-90cb-d0e276339822";
+    @Headers(API_KEY)
     @GET("/profile/pc/{nickname}")
     Call<Player> getPlayerStatsByNickname(@Path("nickname") String nickname);
 
-    @Headers("TRN-Api-Key: ea4f1d45-473b-4925-90cb-d0e276339822")
-    @GET("/search?steamId={steamid}")
-    Call<Player> getPlayerStatsBySteamId(@Path("steamid") String steamid);
+    @Headers(API_KEY)
+    @GET("/search?")
+    Call<Player> getPlayerStatsBySteamId(@Query("steamId") String steamid);
 }
