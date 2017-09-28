@@ -1,8 +1,9 @@
 package br.com.adley.pubgstats.data;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Season {
 
@@ -17,7 +18,7 @@ public class Season {
     private String match;
     @SerializedName("Stats")
     @Expose
-    private List<Stats> statses = null;
+    private List<Stats> stats = null;
 
     public String getRegion() {
         return region;
@@ -43,12 +44,12 @@ public class Season {
         this.match = match;
     }
 
-    public List<Stats> getStatses() {
-        return statses;
+    public List<Stats> getStats() {
+        return stats;
     }
 
-    public void setStatses(List<Stats> statses) {
-        this.statses = statses;
+    public void setStats(List<Stats> statses) {
+        this.stats = statses;
     }
 
 }

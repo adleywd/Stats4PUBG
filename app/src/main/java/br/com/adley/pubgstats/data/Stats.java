@@ -28,7 +28,7 @@ public class Stats {
     private int rank;
     @SerializedName("percentile")
     @Expose
-    private int percentile;
+    private float percentile;
     @SerializedName("displayValue")
     @Expose
     private String displayValue;
@@ -89,11 +89,11 @@ public class Stats {
         this.rank = rank;
     }
 
-    public int getPercentile() {
+    public float getPercentile() {
         return percentile;
     }
 
-    public void setPercentile(int percentile) {
+    public void setPercentile(float percentile) {
         this.percentile = percentile;
     }
 

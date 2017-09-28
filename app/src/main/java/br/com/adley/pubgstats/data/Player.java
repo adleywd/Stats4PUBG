@@ -34,7 +34,7 @@ public class Player {
     @SerializedName("PubgTrackerId")
     @Expose
     private int pubgTrackerId;
-    @SerializedName("Season")
+    @SerializedName("Stats")
     @Expose
     private List<Season> seasons = null;
     @SerializedName("MatchHistory")
