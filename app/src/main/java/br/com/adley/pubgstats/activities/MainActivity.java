@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mSearchButton;
     private EditText mSearchInput;
     private RelativeLayout mRelativeLayout;
-    private RadioButton mRadioNickname;
-    private RadioButton mRadioSteamID;
     private Player mPlayer;
     private List<MatchHistory> mMatchHistory;
     private List<Season> mSeasons;
@@ -60,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         mSearchInput = (EditText)findViewById(R.id.input_player_nickname);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.main_layout);
         mSpinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-        mRadioNickname = (RadioButton) findViewById(R.id.radio_nickname);
-        mRadioSteamID = (RadioButton) findViewById(R.id.radio_steamid);
         mCardViewResult = (CardView) findViewById(R.id.cardViewResult);
         mMatchesPlayed = (TextView) findViewById(R.id.txtMatchesPlayed);
         mWins = (TextView) findViewById(R.id.txtWins);
@@ -77,58 +72,39 @@ public class MainActivity extends AppCompatActivity {
                     closeKeyboard();
                     mCardViewResult.setVisibility(View.GONE);
                     mSpinnerLayout.setVisibility(View.VISIBLE);
-                    if(mRadioNickname.isChecked()){
-                        // BUSCA POR NICKNAME
-                        mService.getPlayerStatsByNickname(mSearchInput.getText().toString()).enqueue(new Callback<Player>() {
-                            @Override
-                            public void onResponse(Call<Player> call, Response<Player> response) {
-                                if (response.isSuccessful()) {
-                                    if(response.body() != null) {
-                                        mPlayer = response.body();
-                                        mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
-                                        mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                                        if(mSeasons != null){
-                                            bindCardView();
-                                        }else{
-                                            Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
-                                            snackbar.show();
-                                        }
+
+                    // SEARCH FOR NICKNAME
+                    mService.getPlayerStatsByNickname(mSearchInput.getText().toString()).enqueue(new Callback<Player>() {
+                        @Override
+                        public void onResponse(Call<Player> call, Response<Player> response) {
+                            if (response.isSuccessful()) {
+                                if(response.body() != null) {
+                                    mPlayer = response.body();
+                                    mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
+                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+                                    if(mSeasons != null){
+                                        bindCardView();
+                                    }else{
+                                        Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
+                                        snackbar.show();
                                     }
-                                } else {
-                                    int statusCode = response.code();
-                                    Log.e(LOG_TAG, String.valueOf(statusCode));
                                 }
+                            } else {
+                                int statusCode = response.code();
+                                Log.e(LOG_TAG, String.valueOf(statusCode));
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Call<Player> call, Throwable t) {
-                                Log.e(LOG_TAG, "Ocorreu um erro");
-                                Log.e(LOG_TAG, t.getMessage());
-                                Log.e(LOG_TAG, t.toString());
-                            }
-                        });
-                    }else{
-                        // BUSCA POR STEAMID
-                        mService.getPlayerStatsBySteamId(mSearchInput.getText().toString()).enqueue(new Callback<Player>() {
-                            @Override
-                            public void onResponse(Call<Player> call, Response<Player> response) {
-                                if (response.isSuccessful()) {
-                                    Log.e(LOG_TAG, String.valueOf(response.body().getPlayerName()));
-                                    //TODO
-                                } else {
-                                    int statusCode = response.code();
-                                    Log.e(LOG_TAG, String.valueOf(statusCode));
-                                }
-                            }
+                        @Override
+                        public void onFailure(Call<Player> call, Throwable t) {
+                            Snackbar snackbar = Snackbar.make(mRelativeLayout, "An error happened: "+t.getMessage(), Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            Log.e(LOG_TAG, "Ocorreu um erro");
+                            Log.e(LOG_TAG, t.getMessage());
+                            Log.e(LOG_TAG, t.toString());
+                        }
+                    });
 
-                            @Override
-                            public void onFailure(Call<Player> call, Throwable t) {
-                                Log.e(LOG_TAG, "Ocorreu um erro");
-                                Log.e(LOG_TAG, t.getMessage());
-                                Log.e(LOG_TAG, t.toString());
-                            }
-                        });
-                    }
                 }else{
                     Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
                     snackbar.show();
@@ -140,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void bindCardView(){
         List<Stats> statsList;
-        DecimalFormat df = new DecimalFormat("0.00##");
+        DecimalFormat df = new DecimalFormat("#.00");
         int killsTotal = 0, winsTotal = 0, top10s = 0, matchesPlayedTotal = 0, healsTotal = 0;
         float kdAverage, kdTotal = 0;
         for(Season season: mSeasons){
@@ -150,8 +126,11 @@ public class MainActivity extends AppCompatActivity {
                 statsList = season.getStats();
 
                 // Get All Matches Played
-                // TODO: Still not the same as https://pubgtracker.com
-                matchesPlayedTotal += season.getStats().size();
+                for(Stats stats : statsList) {
+                    if(stats.getLabel().equals("Rounds Played")){
+                        matchesPlayedTotal += stats.getValueInt();
+                    }
+                }
 
                 // Get All Kills
                 for(Stats stats : statsList){

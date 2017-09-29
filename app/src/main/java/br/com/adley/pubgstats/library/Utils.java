@@ -8,7 +8,7 @@ package br.com.adley.pubgstats.library;
 public class Utils {
 
     public static float getKDAverage(int kills, int matchesPlayed, int wins){
-        return (float)kills / (float)(matchesPlayed-wins);
+        return (float)kills / (float)(matchesPlayed - wins);
     }
 
 }

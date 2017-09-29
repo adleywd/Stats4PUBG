@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">PUBG-Stats</string>
+    <string name="app_name">My-PUBG</string>
     <string name="search_button">Search</string>
-    <string name="label_input_nickname">PUBG-Stats:</string>
+    <string name="label_input_nickname">pubg username</string>
     <string name="api_url">https://pubgtracker.com/api/</string>
     <string name="empty_input_nickname">You must fill the nickname</string>
 </resources>
