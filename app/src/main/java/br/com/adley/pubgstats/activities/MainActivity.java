@@ -6,10 +6,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,7 +34,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName();
     private PBTService mService;
-    private Button mSearchButton;
+    private ImageButton mSearchButton;
     private EditText mSearchInput;
     private RelativeLayout mRelativeLayout;
     private Player mPlayer;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mService = ApiUtils.getPBTService(getString(R.string.api_url));
-        mSearchButton = (Button)findViewById(R.id.search_button);
+        mSearchButton = (ImageButton)findViewById(R.id.search_button);
         mSearchInput = (EditText)findViewById(R.id.input_player_nickname);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.main_layout);
         mSpinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
@@ -65,60 +67,76 @@ public class MainActivity extends AppCompatActivity {
         mKD = (TextView) findViewById(R.id.txtKd);
         mHeals = (TextView) findViewById(R.id.txtHeals);
 
+        // Perform an action when search key in keyboard is pressed.
+        mSearchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_SEARCH){
+                    getPlayer();
+                    return true;
+                }
+                return false;
+            }
+        });
+        // Perform an action when click on search button.
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSearchInput != null && !mSearchInput.getText().toString().equals("")) {
-                    closeKeyboard();
-                    mCardViewResult.setVisibility(View.GONE);
-                    mSpinnerLayout.setVisibility(View.VISIBLE);
-
-                    // SEARCH FOR NICKNAME
-                    mService.getPlayerStatsByNickname(mSearchInput.getText().toString()).enqueue(new Callback<Player>() {
-                        @Override
-                        public void onResponse(Call<Player> call, Response<Player> response) {
-                            if (response.isSuccessful()) {
-                                if(response.body() != null) {
-                                    mPlayer = response.body();
-                                    mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
-                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                                    if(mSeasons != null){
-                                        bindCardView();
-                                    }else{
-                                        Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
-                                        snackbar.show();
-                                    }
-                                }
-                            } else {
-                                int statusCode = response.code();
-                                Log.e(LOG_TAG, String.valueOf(statusCode));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Player> call, Throwable t) {
-                            Snackbar snackbar = Snackbar.make(mRelativeLayout, "An error happened: "+t.getMessage(), Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                            Log.e(LOG_TAG, "Ocorreu um erro");
-                            Log.e(LOG_TAG, t.getMessage());
-                            Log.e(LOG_TAG, t.toString());
-                        }
-                    });
-
-                }else{
-                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }
+                getPlayer();
             }
         });
 
     }
 
+    public void getPlayer(){
+        if (mSearchInput != null && !mSearchInput.getText().toString().trim().equals("")) {
+            closeKeyboard();
+            mCardViewResult.setVisibility(View.GONE);
+            mSpinnerLayout.setVisibility(View.VISIBLE);
+
+            // SEARCH FOR NICKNAME
+            mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
+                @Override
+                public void onResponse(Call<Player> call, Response<Player> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body() != null) {
+                            mPlayer = response.body();
+                            mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
+                            mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+                            if(mSeasons != null){
+                                bindCardView();
+                            }else{
+                                Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+                        }
+                    } else {
+                        int statusCode = response.code();
+                        Log.e(LOG_TAG, String.valueOf(statusCode));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Player> call, Throwable t) {
+                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "An error happened: "+t.getMessage(), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    Log.e(LOG_TAG, "Ocorreu um erro");
+                    Log.e(LOG_TAG, t.getMessage());
+                    Log.e(LOG_TAG, t.toString());
+                }
+            });
+
+        }else{
+            Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
+
     public void bindCardView(){
         List<Stats> statsList;
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         int killsTotal = 0, winsTotal = 0, top10s = 0, matchesPlayedTotal = 0, healsTotal = 0;
-        float kdAverage, kdTotal = 0;
+        float kdAverage;
         for(Season season: mSeasons){
             // Get all seasons "Aggregated". This type of season contains all seasons.
             // Here the type o game (solo, duo...) doesn't matter. We want all.
@@ -160,12 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                // Get KD from all time
-                for(Stats stats : statsList){
-                    if(stats.getLabel().equals("K/D Ratio")){
-                        kdTotal += stats.getValueDec();
-                    }
-                }
             }
         }
 
