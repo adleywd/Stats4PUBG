@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mKills;
     private TextView mKD;
     private TextView mHeals;
-    private LinearLayout mSpinnerLayout;
+    private LinearLayout mLoaderLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchButton = (ImageButton)findViewById(R.id.search_button);
         mSearchInput = (EditText)findViewById(R.id.input_player_nickname);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.main_layout);
-        mSpinnerLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
+        mLoaderLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
         mCardViewResult = (CardView) findViewById(R.id.cardViewResult);
         mMatchesPlayed = (TextView) findViewById(R.id.txtMatchesPlayed);
         mWins = (TextView) findViewById(R.id.txtWins);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         if (mSearchInput != null && !mSearchInput.getText().toString().trim().equals("")) {
             closeKeyboard();
             mCardViewResult.setVisibility(View.GONE);
-            mSpinnerLayout.setVisibility(View.VISIBLE);
+            mLoaderLayout.setVisibility(View.VISIBLE);
 
             // SEARCH FOR NICKNAME
             mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
@@ -101,13 +101,21 @@ public class MainActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         if(response.body() != null) {
                             mPlayer = response.body();
-                            mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
-                            mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                            if(mSeasons != null){
-                                bindCardView();
-                            }else{
-                                Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
+                            // Validate if has error message.
+                            if(mPlayer != null && mPlayer.getError() == 1){
+                                mLoaderLayout.setVisibility(View.GONE);
+                                Snackbar snackbar = Snackbar.make(mRelativeLayout, mPlayer.getErrorMessage(), Snackbar.LENGTH_LONG);
                                 snackbar.show();
+                            } else {
+                                mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
+                                mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+                                if (mSeasons != null) {
+                                    bindCardView();
+                                } else {
+                                    mLoaderLayout.setVisibility(View.GONE);
+                                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                }
                             }
                         }
                     } else {
@@ -120,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onFailure(Call<Player> call, Throwable t) {
                     Snackbar snackbar = Snackbar.make(mRelativeLayout, "An error happened: "+t.getMessage(), Snackbar.LENGTH_LONG);
                     snackbar.show();
-                    Log.e(LOG_TAG, "Ocorreu um erro");
+                    Log.e(LOG_TAG, "An error happened...");
                     Log.e(LOG_TAG, t.getMessage());
                     Log.e(LOG_TAG, t.toString());
                 }
@@ -191,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         mHeals.setText(String.valueOf(healsTotal));
         mKD.setText(String.valueOf(df.format(kdAverage)));
         // Hide spinner loader.
-        mSpinnerLayout.setVisibility(View.GONE);
+        mLoaderLayout.setVisibility(View.GONE);
         // Make the card view result visible.
         mCardViewResult.setVisibility(View.VISIBLE);
     }

@@ -40,6 +40,12 @@ public class Player {
     @SerializedName("MatchHistory")
     @Expose
     private List<MatchHistory> matchHistory = null;
+    @SerializedName("error")
+    @Expose
+    private int error;
+    @SerializedName("message")
+    @Expose
+    private String errorMessage;
 
     public int getPlatformId() {
         return platformId;
@@ -128,5 +134,13 @@ public class Player {
     public void setMatchHistory(List<MatchHistory> matchHistory) {
         this.matchHistory = matchHistory;
     }
+
+    public int getError() { return error; }
+
+    public void setError(int error) { this.error = error; }
+
+    public String getErrorMessage() { return errorMessage; }
+
+    public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
 
 }
