@@ -42,7 +42,7 @@ public class Player {
     private List<MatchHistory> matchHistory = null;
     @SerializedName("error")
     @Expose
-    private int error;
+    private String error;
     @SerializedName("message")
     @Expose
     private String errorMessage;
@@ -135,9 +135,9 @@ public class Player {
         this.matchHistory = matchHistory;
     }
 
-    public int getError() { return error; }
+    public String getError() { return error; }
 
-    public void setError(int error) { this.error = error; }
+    public void setError(String error) { this.error = error; }
 
     public String getErrorMessage() { return errorMessage; }
 

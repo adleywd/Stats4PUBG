@@ -102,9 +102,18 @@ public class MainActivity extends AppCompatActivity {
                         if(response.body() != null) {
                             mPlayer = response.body();
                             // Validate if has error message.
-                            if(mPlayer != null && mPlayer.getError() == 1){
+                            if(mPlayer != null && !mPlayer.getError().isEmpty()){
                                 mLoaderLayout.setVisibility(View.GONE);
-                                Snackbar snackbar = Snackbar.make(mRelativeLayout, mPlayer.getErrorMessage(), Snackbar.LENGTH_LONG);
+                                Snackbar snackbar;
+                                String errorMessage;
+                                if(mPlayer.getErrorMessage() != null && !mPlayer.getErrorMessage().isEmpty()){
+                                    errorMessage = mPlayer.getErrorMessage();
+                                } else if(!mPlayer.getError().isEmpty()){
+                                    errorMessage = mPlayer.getError();
+                                } else {
+                                    errorMessage = "Something went wrong :(";
+                                }
+                                snackbar = Snackbar.make(mRelativeLayout, errorMessage, Snackbar.LENGTH_LONG);
                                 snackbar.show();
                             } else {
                                 mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
