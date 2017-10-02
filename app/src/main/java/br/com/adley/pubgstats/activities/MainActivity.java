@@ -1,7 +1,9 @@
 package br.com.adley.pubgstats.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -26,6 +28,7 @@ import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
+import br.com.adley.pubgstats.library.Constants;
 import br.com.adley.pubgstats.library.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private List<MatchHistory> mMatchHistory;
     private List<Season> mSeasons;
     private List<Stats> mStats;
-    private CardView mCardViewResult;
+    private CardView mCardViewPlayerResume;
     private TextView mMatchesPlayed;
     private TextView mWins;
     private TextView mTop10s;
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mSearchInput = (EditText)findViewById(R.id.input_player_nickname);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.main_layout);
         mLoaderLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-        mCardViewResult = (CardView) findViewById(R.id.cardViewResult);
+        mCardViewPlayerResume = (CardView) findViewById(R.id.cardViewPlayerResume);
         mMatchesPlayed = (TextView) findViewById(R.id.txtMatchesPlayed);
         mWins = (TextView) findViewById(R.id.txtWins);
         mTop10s = (TextView) findViewById(R.id.txtTop10);
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         // Perform an action when click on search button.
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,18 +90,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Start player static details activity
+        mCardViewPlayerResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // start - Just for tests
+                mPlayer = new Player();
+                mPlayer.setPlayerName("Adley");
+                // end  - Just for tests
+                // Prepare the parcelable object to be sent to another activity using an Intent Class.
+                Intent intentPlayerDetails = new Intent();
+                Bundle bundlePlayerDetails = new Bundle();
+                bundlePlayerDetails.putParcelable(Constants.PLAYER_OBJ_KEY, mPlayer);
+                intentPlayerDetails.putExtras(bundlePlayerDetails);
+                // Initiate player details stats class.
+                intentPlayerDetails.setClass(MainActivity.this, PlayerDetailsActivity.class);
+                startActivity(intentPlayerDetails);
+            }
+        });
+
     }
 
     public void getPlayer(){
         if (mSearchInput != null && !mSearchInput.getText().toString().trim().equals("")) {
             closeKeyboard();
-            mCardViewResult.setVisibility(View.GONE);
+            mCardViewPlayerResume.setVisibility(View.GONE);
             mLoaderLayout.setVisibility(View.VISIBLE);
 
             // SEARCH FOR NICKNAME
             mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
                 @Override
-                public void onResponse(Call<Player> call, Response<Player> response) {
+                public void onResponse(Call<Player> call, @NonNull Response<Player> response) {
                     if (response.isSuccessful()) {
                         if(response.body() != null) {
                             mPlayer = response.body();
@@ -210,12 +233,13 @@ public class MainActivity extends AppCompatActivity {
         // Hide spinner loader.
         mLoaderLayout.setVisibility(View.GONE);
         // Make the card view result visible.
-        mCardViewResult.setVisibility(View.VISIBLE);
+        mCardViewPlayerResume.setVisibility(View.VISIBLE);
     }
 
     private void closeKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        } catch (NullPointerException ignored){}
     }
-
 }
