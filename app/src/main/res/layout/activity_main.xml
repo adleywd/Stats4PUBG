@@ -79,13 +79,13 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardViewPlayerResume"
-                android:layout_width="330dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:visibility="visible"
-                app:cardBackgroundColor="@color/cardview_light_background"
-                app:cardCornerRadius="20dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/colorCardView"
+                app:cardCornerRadius="10dp"
                 app:cardPreventCornerOverlap="true">
 
                 <RelativeLayout
@@ -106,21 +106,24 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/matches_label" />
+                            android:text="@string/matches_label"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/wins_label" />
+                            android:text="@string/wins_label"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/top_10s_label" />
+                            android:text="@string/top_10s_label"
+                            android:textColor="@color/md_white_1000" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -137,21 +140,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:id="@+id/txtWins"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:id="@+id/txtTop10"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -168,21 +174,24 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/kills_label" />
+                            android:text="@string/kills_label"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/kd_label" />
+                            android:text="@string/kd_label"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="@string/heals_label" />
+                            android:text="@string/heals_label"
+                            android:textColor="@color/md_white_1000" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -198,21 +207,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:id="@+id/txtKd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
 
                         <TextView
                             android:id="@+id/txtHeals"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/md_white_1000" />
                     </LinearLayout>
 
                 </RelativeLayout>

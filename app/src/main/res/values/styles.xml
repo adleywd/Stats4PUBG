@@ -8,7 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:icon">@color/colorIcon</item>
         <item name="android:windowBackground">@color/colorWindowBackground</item>
-        <item name="cardBackgroundColor">@color/colorPrimary</item>
+        <item name="cardBackgroundColor">@color/colorCardView</item>
+        <item name="titleTextColor">@color/md_black_1000</item>
+        <item name="android:textColorHint">@color/textColorHint</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:textColorSecondaryInverse">@color/textColorSecondaryInverse</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

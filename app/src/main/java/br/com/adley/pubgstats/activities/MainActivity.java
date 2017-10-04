@@ -3,11 +3,9 @@ package br.com.adley.pubgstats.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -18,6 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -30,9 +32,6 @@ import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
 import br.com.adley.pubgstats.library.Constants;
 import br.com.adley.pubgstats.library.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName();
@@ -94,10 +93,6 @@ public class MainActivity extends AppCompatActivity {
         mCardViewPlayerResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // start - Just for tests
-                mPlayer = new Player();
-                mPlayer.setPlayerName("Adley");
-                // end  - Just for tests
                 // Prepare the parcelable object to be sent to another activity using an Intent Class.
                 Intent intentPlayerDetails = new Intent();
                 Bundle bundlePlayerDetails = new Bundle();
@@ -116,9 +111,11 @@ public class MainActivity extends AppCompatActivity {
             closeKeyboard();
             mCardViewPlayerResume.setVisibility(View.GONE);
             mLoaderLayout.setVisibility(View.VISIBLE);
+            getAdleyObject();
 
+            // Commented while API is disabled
             // SEARCH FOR NICKNAME
-            mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
+            /*mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
                 @Override
                 public void onResponse(Call<Player> call, @NonNull Response<Player> response) {
                     if (response.isSuccessful()) {
@@ -165,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOG_TAG, t.toString());
                 }
             });
-
+*/
         }else{
             Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
             snackbar.show();
@@ -242,4 +239,28 @@ public class MainActivity extends AppCompatActivity {
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
         } catch (NullPointerException ignored){}
     }
+
+    // TEST CLASS
+    private void getAdleyObject(){
+        Gson gson = new Gson();
+        String json;
+        try {
+            InputStream is = getAssets().open("adley_pubg.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+            mPlayer = gson.fromJson(json, Player.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
+        mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+        if (mSeasons != null) {
+            bindCardView();
+        }
+    }
 }
+
