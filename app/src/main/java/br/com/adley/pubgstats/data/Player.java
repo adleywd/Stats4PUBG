@@ -1,14 +1,11 @@
 package br.com.adley.pubgstats.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Player implements Parcelable {
+public class Player {
 
     @SerializedName("platformId")
     @Expose
@@ -50,35 +47,7 @@ public class Player implements Parcelable {
     @Expose
     private String errorMessage;
 
-    protected Player(Parcel in) {
-        platformId = in.readInt();
-        accountId = in.readString();
-        avatar = in.readString();
-        selectedRegion = in.readString();
-        defaultSeason = in.readString();
-        seasonDisplay = in.readString();
-        lastUpdated = in.readString();
-        playerName = in.readString();
-        pubgTrackerId = in.readInt();
-        error = in.readString();
-        errorMessage = in.readString();
-    }
-
-    public Player(){
-
-    }
-
-    public static final Creator<Player> CREATOR = new Creator<Player>() {
-        @Override
-        public Player createFromParcel(Parcel in) {
-            return new Player(in);
-        }
-
-        @Override
-        public Player[] newArray(int size) {
-            return new Player[size];
-        }
-    };
+    private LifetimeStats lifetimeStats;
 
     public int getPlatformId() {
         return platformId;
@@ -176,23 +145,16 @@ public class Player implements Parcelable {
 
     public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public LifetimeStats getLifetimeStats() {
+        if(lifetimeStats == null){
+            if(seasons != null){
+                lifetimeStats = new LifetimeStats(seasons);
+            }
+        }
+        return lifetimeStats;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(platformId);
-        parcel.writeString(accountId);
-        parcel.writeString(avatar);
-        parcel.writeString(selectedRegion);
-        parcel.writeString(defaultSeason);
-        parcel.writeString(seasonDisplay);
-        parcel.writeString(lastUpdated);
-        parcel.writeString(playerName);
-        parcel.writeInt(pubgTrackerId);
-        parcel.writeString(error);
-        parcel.writeString(errorMessage);
+    public void setLifetimeStats(LifetimeStats lifetimeStats) {
+        this.lifetimeStats = lifetimeStats;
     }
 }

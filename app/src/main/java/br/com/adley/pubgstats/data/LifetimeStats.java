@@ -1,0 +1,124 @@
+package br.com.adley.pubgstats.data;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+import br.com.adley.pubgstats.library.Utils;
+
+/**
+ * Created by Adley.Damaceno on 06/10/2017.
+ * Contain the lifetime stats about the player.
+ */
+
+public class LifetimeStats {
+
+    private int roundsPlayed;
+    private int kills;
+    private int wins;
+    private int top10s;
+    private int healsTotal;
+    private float kdAverage;
+
+
+    public LifetimeStats() {
+    }
+
+    public LifetimeStats(List<Season> seasons) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        List<Stats> statsList;
+        for (Season season : seasons) {
+            // Get all seasons "Aggregated". This type of season contains all seasons.
+            // Here the type o game (solo, duo...) doesn't matter. We want all.
+            if (season.getRegion().equals("agg")) {
+                statsList = season.getStats();
+
+                // Get All Matches Played
+                for (Stats stats : statsList) {
+                    if (stats.getLabel().equals("Rounds Played")) {
+                        roundsPlayed += stats.getValueInt();
+                    }
+                }
+
+                // Get All Kills
+                for (Stats stats : statsList) {
+                    if (stats.getLabel().equals("Kills")) {
+                        kills += stats.getValueInt();
+                    }
+                }
+
+                // Get All Wins
+                for (Stats stats : statsList) {
+                    if (stats.getLabel().equals("Wins")) {
+                        wins += stats.getValueInt();
+                    }
+                }
+
+                // Get All Top 10s
+                for (Stats stats : statsList) {
+                    if (stats.getLabel().equals("Top 10s")) {
+                        top10s += stats.getValueInt();
+                    }
+                }
+
+                // Get All Heals
+                for (Stats stats : statsList) {
+                    if (stats.getLabel().equals("Heals")) {
+                        healsTotal += stats.getValueInt();
+                    }
+                }
+            }
+        }
+        // Get the average of K/D
+        kdAverage = Float.parseFloat(df.format(Utils.getKDAverage(kills, roundsPlayed, wins)));
+    }
+
+
+    public int getRoundsPlayed() {
+        return roundsPlayed;
+    }
+
+    public void setRoundsPlayed(int roundsPlayed) {
+        this.roundsPlayed = roundsPlayed;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getTop10s() {
+        return top10s;
+    }
+
+    public void setTop10s(int top10s) {
+        this.top10s = top10s;
+    }
+
+    public int getHealsTotal() {
+        return healsTotal;
+    }
+
+    public void setHealsTotal(int healsTotal) {
+        this.healsTotal = healsTotal;
+    }
+
+    public float getKdAverage() {
+        return kdAverage;
+    }
+
+    public void setKdAverage(float kdAverage) {
+        this.kdAverage = kdAverage;
+    }
+
+}

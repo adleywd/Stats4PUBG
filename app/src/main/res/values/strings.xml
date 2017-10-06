@@ -1,15 +1,8 @@
 <resources>
     <string name="app_name">MyStats-PUBG</string>
-    <string name="search_button">Search</string>
-    <string name="label_input_nickname">pubg username</string>
     <string name="api_url">https://pubgtracker.com/api/</string>
     <string name="empty_input_nickname">You must fill the nickname</string>
-    <string name="title_activity_player_details">Player Stats</string>
-    <string name="action_settings">Settings</string>
-    <string name="matches_label">Matches</string>
-    <string name="wins_label">Wins</string>
-    <string name="top_10s_label">Top 10s</string>
-    <string name="kills_label">Kills</string>
-    <string name="kd_label">K/D</string>
-    <string name="heals_label">Heals</string>
+    <string name="action_search">Enter search</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="search_hint">pubg username</string>
 </resources>

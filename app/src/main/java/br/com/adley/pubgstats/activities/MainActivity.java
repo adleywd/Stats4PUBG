@@ -1,266 +1,223 @@
 package br.com.adley.pubgstats.activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.view.KeyEvent;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
+import br.com.adley.pubgstats.data.LifetimeStats;
 import br.com.adley.pubgstats.data.MatchHistory;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
-import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
-import br.com.adley.pubgstats.library.Constants;
-import br.com.adley.pubgstats.library.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private String LOG_TAG = MainActivity.class.getSimpleName();
+
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * fragments for each of the sections. We use a
+     * {@link FragmentPagerAdapter} derivative, which will keep every
+     * loaded fragment in memory. If this becomes too memory intensive, it
+     * may be best to switch to a
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private ViewPager mViewPager;
     private PBTService mService;
-    private ImageButton mSearchButton;
-    private EditText mSearchInput;
-    private RelativeLayout mRelativeLayout;
     private Player mPlayer;
     private List<MatchHistory> mMatchHistory;
     private List<Season> mSeasons;
     private List<Stats> mStats;
-    private CardView mCardViewPlayerResume;
-    private TextView mMatchesPlayed;
-    private TextView mWins;
-    private TextView mTop10s;
-    private TextView mKills;
-    private TextView mKD;
-    private TextView mHeals;
-    private LinearLayout mLoaderLayout;
+    private LifetimeStats mLifetimeStats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mService = ApiUtils.getPBTService(getString(R.string.api_url));
-        mSearchButton = (ImageButton)findViewById(R.id.search_button);
-        mSearchInput = (EditText)findViewById(R.id.input_player_nickname);
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.main_layout);
-        mLoaderLayout = (LinearLayout) findViewById(R.id.spinnerLayout);
-        mCardViewPlayerResume = (CardView) findViewById(R.id.cardViewPlayerResume);
-        mMatchesPlayed = (TextView) findViewById(R.id.txtMatchesPlayed);
-        mWins = (TextView) findViewById(R.id.txtWins);
-        mTop10s = (TextView) findViewById(R.id.txtTop10);
-        mKills = (TextView) findViewById(R.id.txtKills);
-        mKD = (TextView) findViewById(R.id.txtKd);
-        mHeals = (TextView) findViewById(R.id.txtHeals);
 
-        // Perform an action when search key in keyboard is pressed.
-        mSearchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(i == EditorInfo.IME_ACTION_SEARCH){
-                    getPlayer();
-                    return true;
-                }
-                return false;
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Perform an action when click on search button.
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getPlayer();
-            }
-        });
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        // Start player static details activity
-        mCardViewPlayerResume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Prepare the parcelable object to be sent to another activity using an Intent Class.
-                Intent intentPlayerDetails = new Intent();
-                Bundle bundlePlayerDetails = new Bundle();
-                bundlePlayerDetails.putParcelable(Constants.PLAYER_OBJ_KEY, mPlayer);
-                intentPlayerDetails.putExtras(bundlePlayerDetails);
-                // Initiate player details stats class.
-                intentPlayerDetails.setClass(MainActivity.this, PlayerDetailsActivity.class);
-                startActivity(intentPlayerDetails);
-            }
-        });
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
     }
 
-    public void getPlayer(){
-        if (mSearchInput != null && !mSearchInput.getText().toString().trim().equals("")) {
-            closeKeyboard();
-            mCardViewPlayerResume.setVisibility(View.GONE);
-            mLoaderLayout.setVisibility(View.VISIBLE);
-            getAdleyObject();
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-            // Commented while API is disabled
-            // SEARCH FOR NICKNAME
-            /*mService.getPlayerStatsByNickname(mSearchInput.getText().toString().trim()).enqueue(new Callback<Player>() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            //doSomething
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "SECTION 1";
+                case 1:
+                    return "SECTION 2";
+                case 2:
+                    return "SECTION 3";
+            }
+            return null;
+        }
+    }
+
+    public void getPlayer(String playerName) {
+        if (playerName != null && !playerName.isEmpty()) {
+            mService.getPlayerStatsByNickname(playerName.trim()).enqueue(new Callback<Player>() {
                 @Override
                 public void onResponse(Call<Player> call, @NonNull Response<Player> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body() != null) {
-                            mPlayer = response.body();
-                            // Validate if has error message.
-                            if(mPlayer != null && !mPlayer.getError().isEmpty()){
-                                mLoaderLayout.setVisibility(View.GONE);
-                                Snackbar snackbar;
-                                String errorMessage;
-                                if(mPlayer.getErrorMessage() != null && !mPlayer.getErrorMessage().isEmpty()){
-                                    errorMessage = mPlayer.getErrorMessage();
-                                } else if(!mPlayer.getError().isEmpty()){
-                                    errorMessage = mPlayer.getError();
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                mPlayer = response.body();
+                                // Validate if has error message.
+                                if (mPlayer != null && !mPlayer.getError().isEmpty()) {
+                                    Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
                                 } else {
-                                    errorMessage = "Something went wrong :(";
-                                }
-                                snackbar = Snackbar.make(mRelativeLayout, errorMessage, Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                            } else {
-                                mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
-                                mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                                if (mSeasons != null) {
-                                    bindCardView();
-                                } else {
-                                    mLoaderLayout.setVisibility(View.GONE);
-                                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "User not found.", Snackbar.LENGTH_LONG);
-                                    snackbar.show();
+                                    mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
+                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
                                 }
                             }
+                        } else {
+                            int statusCode = response.code();
+                            Toast.makeText(MainActivity.this, "Error code: "+statusCode, Toast.LENGTH_LONG).show();
+                            Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
-                    } else {
-                        int statusCode = response.code();
-                        Log.e(LOG_TAG, String.valueOf(statusCode));
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Player> call, Throwable t) {
-                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "An error happened: "+t.getMessage(), Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     Log.e(LOG_TAG, "An error happened...");
                     Log.e(LOG_TAG, t.getMessage());
                     Log.e(LOG_TAG, t.toString());
                 }
             });
-*/
-        }else{
-            Snackbar snackbar = Snackbar.make(mRelativeLayout, "Você deve preencher o campo de busca.", Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
-    }
 
-    public void bindCardView(){
-        List<Stats> statsList;
-        DecimalFormat df = new DecimalFormat("0.00");
-        int killsTotal = 0, winsTotal = 0, top10s = 0, matchesPlayedTotal = 0, healsTotal = 0;
-        float kdAverage;
-        for(Season season: mSeasons){
-            // Get all seasons "Aggregated". This type of season contains all seasons.
-            // Here the type o game (solo, duo...) doesn't matter. We want all.
-            if(season.getRegion().equals("agg")){
-                statsList = season.getStats();
-
-                // Get All Matches Played
-                for(Stats stats : statsList) {
-                    if(stats.getLabel().equals("Rounds Played")){
-                        matchesPlayedTotal += stats.getValueInt();
-                    }
-                }
-
-                // Get All Kills
-                for(Stats stats : statsList){
-                    if(stats.getLabel().equals("Kills")){
-                        killsTotal += stats.getValueInt();
-                    }
-                }
-
-                // Get All Wins
-                for(Stats stats : statsList){
-                    if(stats.getLabel().equals("Wins")){
-                        winsTotal += stats.getValueInt();
-                    }
-                }
-
-                // Get All Top 10s
-                for(Stats stats : statsList){
-                    if(stats.getLabel().equals("Top 10s")){
-                        top10s += stats.getValueInt();
-                    }
-                }
-
-                // Get All Heals
-                for(Stats stats : statsList){
-                    if(stats.getLabel().equals("Heals")){
-                        healsTotal += stats.getValueInt();
-                    }
-                }
-
-            }
-        }
-
-        // Get the average of K/D
-        kdAverage = Utils.getKDAverage(killsTotal, matchesPlayedTotal, winsTotal);
-
-        mKills.setText(String.valueOf(killsTotal));
-        mWins.setText(String.valueOf(winsTotal));
-        mTop10s.setText(String.valueOf(top10s));
-        mMatchesPlayed.setText(String.valueOf(matchesPlayedTotal));
-        mHeals.setText(String.valueOf(healsTotal));
-        mKD.setText(String.valueOf(df.format(kdAverage)));
-        // Hide spinner loader.
-        mLoaderLayout.setVisibility(View.GONE);
-        // Make the card view result visible.
-        mCardViewPlayerResume.setVisibility(View.VISIBLE);
-    }
-
-    private void closeKeyboard() {
-        try {
-            InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
-        } catch (NullPointerException ignored){}
-    }
-
-    // TEST CLASS
-    private void getAdleyObject(){
-        Gson gson = new Gson();
-        String json;
-        try {
-            InputStream is = getAssets().open("adley_pubg.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-            mPlayer = gson.fromJson(json, Player.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
-        mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-        if (mSeasons != null) {
-            bindCardView();
+        } else {
+            Toast.makeText(MainActivity.this, "Username cannot be empty", Toast.LENGTH_LONG).show();
         }
     }
 }
-
