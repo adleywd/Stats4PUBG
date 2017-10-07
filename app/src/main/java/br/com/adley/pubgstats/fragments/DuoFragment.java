@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import br.com.adley.pubgstats.R;
 
 /**
- * Created by Adley.Damaceno on 06/10/2017.
- * Fragment with lifetime data.
+ * Created by Adley on 06/10/2017.
+ * Fragment with Duo Data.
  */
 
-public class LifeTimeFragment extends Fragment {
+public class DuoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_lifetime, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_duo, container, false);
         return rootView;
     }
 

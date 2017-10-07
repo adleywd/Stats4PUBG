@@ -37,9 +37,9 @@ public class Player {
     @SerializedName("Stats")
     @Expose
     private List<Season> seasons = null;
-    @SerializedName("MatchHistory")
-    @Expose
-    private List<MatchHistory> matchHistory = null;
+    //@SerializedName("MatchHistory")
+    //@Expose
+    //private List<MatchHistory> matchHistory = null;
     @SerializedName("error")
     @Expose
     private String error;
@@ -127,14 +127,6 @@ public class Player {
 
     public void setSeasons(List<Season> seasons) {
         this.seasons = seasons;
-    }
-
-    public List<MatchHistory> getMatchHistory() {
-        return matchHistory;
-    }
-
-    public void setMatchHistory(List<MatchHistory> matchHistory) {
-        this.matchHistory = matchHistory;
     }
 
     public String getError() { return error; }

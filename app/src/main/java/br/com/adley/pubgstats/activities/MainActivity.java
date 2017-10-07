@@ -6,30 +6,29 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
 import br.com.adley.pubgstats.data.LifetimeStats;
-import br.com.adley.pubgstats.data.MatchHistory;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
+import br.com.adley.pubgstats.fragments.DefaultFragment;
+import br.com.adley.pubgstats.fragments.DuoFragment;
+import br.com.adley.pubgstats.fragments.LifeTimeFragment;
+import br.com.adley.pubgstats.fragments.SoloFragment;
+import br.com.adley.pubgstats.fragments.SquadFragment;
 import br.com.adley.pubgstats.library.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,10 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private PBTService mService;
     private Player mPlayer;
-    private List<MatchHistory> mMatchHistory;
+    private LifetimeStats mLifetimeStats;
     private List<Season> mSeasons;
     private List<Stats> mStats;
-    private LifetimeStats mLifetimeStats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem searchitem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchitem);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -110,14 +108,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            //doSomething
+            return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
@@ -126,42 +121,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
     }
 
     /**
@@ -176,26 +135,36 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            if(position == 0){
+                return new LifeTimeFragment();
+            } else if(position == 1){
+                return new SoloFragment();
+            } else if(position == 2){
+                return new DuoFragment();
+            } else if(position == 3){
+                return new SquadFragment();
+            }
+
+            return new DefaultFragment();
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 4 total pages.
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "All";
                 case 1:
-                    return "SECTION 2";
+                    return "Solo";
                 case 2:
-                    return "SECTION 3";
+                    return "Duo";
+                case 3:
+                    return "Squad";
             }
             return null;
         }
@@ -214,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (mPlayer != null && mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
                                     Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
                                 } else {
-                                    mMatchHistory = mPlayer != null ? mPlayer.getMatchHistory() : null;
                                     mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+                                    mLifetimeStats = mPlayer != null ? mPlayer.getLifetimeStats() : null;
                                 }
                             }
                         } else {
