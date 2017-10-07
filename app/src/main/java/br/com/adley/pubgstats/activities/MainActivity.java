@@ -183,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (mPlayer != null && mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
                                     Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
                                 } else {
-                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                                    mLifetimeStats = mPlayer != null ? mPlayer.getLifetimeStats() : null;
+                                    mSeasons = mPlayer.getSeasons();
+                                    mLifetimeStats = mPlayer.getLifetimeStats();
                                 }
                             }
                         } else {
@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Error code: "+statusCode, Toast.LENGTH_LONG).show();
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
+
                         Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null? mPlayer.getPlayerName() : "Deu ruim",Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();

@@ -24,44 +24,30 @@ public class LifetimeStats {
     }
 
     public LifetimeStats(List<Season> seasons) {
-        DecimalFormat df = new DecimalFormat("0.00");
         List<Stats> statsList;
         for (Season season : seasons) {
             // Get all seasons "Aggregated". This type of season contains all seasons.
             // Here the type o game (solo, duo...) doesn't matter. We want all.
             if (season.getRegion().equals("agg")) {
                 statsList = season.getStats();
-
-                // Get All Matches Played
                 for (Stats stats : statsList) {
+                    // Get All Matches Played
                     if (stats.getLabel().equals("Rounds Played")) {
                         roundsPlayed += stats.getValueInt();
                     }
-                }
-
-                // Get All Kills
-                for (Stats stats : statsList) {
+                    // Get All Kills
                     if (stats.getLabel().equals("Kills")) {
                         kills += stats.getValueInt();
                     }
-                }
-
-                // Get All Wins
-                for (Stats stats : statsList) {
+                    // Get All Wins
                     if (stats.getLabel().equals("Wins")) {
                         wins += stats.getValueInt();
                     }
-                }
-
-                // Get All Top 10s
-                for (Stats stats : statsList) {
+                    // Get All Top 10s
                     if (stats.getLabel().equals("Top 10s")) {
                         top10s += stats.getValueInt();
                     }
-                }
-
-                // Get All Heals
-                for (Stats stats : statsList) {
+                    // Get All Heals
                     if (stats.getLabel().equals("Heals")) {
                         healsTotal += stats.getValueInt();
                     }
@@ -69,9 +55,8 @@ public class LifetimeStats {
             }
         }
         // Get the average of K/D
-        kdAverage = Float.parseFloat(df.format(Utils.getKDAverage(kills, roundsPlayed, wins)));
+        kdAverage = Utils.getKDAverage(kills, roundsPlayed, wins);
     }
-
 
     public int getRoundsPlayed() {
         return roundsPlayed;
@@ -120,5 +105,4 @@ public class LifetimeStats {
     public void setKdAverage(float kdAverage) {
         this.kdAverage = kdAverage;
     }
-
 }
