@@ -183,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (mPlayer != null && mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
                                     Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
                                 } else {
-                                    mSeasons = mPlayer.getSeasons();
-                                    mLifetimeStats = mPlayer.getLifetimeStats();
+                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
+                                    mLifetimeStats = mPlayer != null ? mPlayer.getLifetimeStats() : null;
                                 }
                             }
                         } else {
