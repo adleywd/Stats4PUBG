@@ -3,10 +3,6 @@ package br.com.adley.pubgstats.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,22 +10,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
 import br.com.adley.pubgstats.adapters.CustomViewPager;
+import br.com.adley.pubgstats.adapters.MainPageAdapter;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
-import br.com.adley.pubgstats.fragments.DefaultFragment;
-import br.com.adley.pubgstats.fragments.DuoFragment;
-import br.com.adley.pubgstats.fragments.LifeTimeFragment;
-import br.com.adley.pubgstats.fragments.SoloFragment;
-import br.com.adley.pubgstats.fragments.SquadFragment;
 import br.com.adley.pubgstats.library.Utils;
 import br.com.adley.pubgstats.wrapper.DuoStats;
 import br.com.adley.pubgstats.wrapper.LifetimeStats;
@@ -41,24 +35,13 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private CustomViewPager mViewPager;
     private TabLayout mTabLayout;
     private PBTService mService;
     private Player mPlayer;
+    private LinearLayout mLayoutPlayerSearchLabel;
+    private boolean mIsUserNotSearch = true;
     private LifetimeStats mLifetimeStats;
     private SoloStats mSoloStats;
     private DuoStats mDuoStats;
@@ -70,21 +53,77 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mService = ApiUtils.getPBTService(getString(R.string.api_url));
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (CustomViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mService = ApiUtils.getPBTService(getString(R.string.api_url));
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setPagingEnabled(false);
-        mTabLayout.setVisibility(View.GONE);
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
+        mLayoutPlayerSearchLabel = (LinearLayout) findViewById(R.id.layout_player_search_label);
+
+        // Create custom tabs.
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        // Set lifetime fragment.
+        View lifetimeView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView lifetimeTabText = lifetimeView.findViewById(R.id.text_tab);
+        lifetimeTabText.setText(getString(R.string.tab_lifetime));
+        // Set Icon
+        //ImageView lifetime_tab_icon = (ImageView) favoritesView.findViewById(R.id.icon_tab);
+        //lifetime_tab_icon.setImageResource(R.drawable.ic_favorite_white_24dp);
+
+        // Solo Stats Fragment
+        View soloView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView soloTabText = soloView.findViewById(R.id.text_tab);
+        soloTabText .setText(getString(R.string.tab_solo));
+
+        // Duo Stats Fragment
+        View duoView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView duoTabText = duoView.findViewById(R.id.text_tab);
+        duoTabText .setText(getString(R.string.tab_duo));
+
+        // Squad Stats Fragment
+        View squadView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView squadTabText = squadView.findViewById(R.id.text_tab);
+        squadTabText .setText(getString(R.string.tab_squad));
+
+        if (mTabLayout != null) {
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(lifetimeView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(soloView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(duoView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(squadView));
+            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
+            if (mViewPager != null) {
+                mViewPager.setAdapter(adapter);
+                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+                mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        if(mPlayer == null){
+                            mViewPager.setVisibility(View.GONE);
+                            mLayoutPlayerSearchLabel.setVisibility(View.VISIBLE);
+                        } else {
+                          mViewPager.setVisibility(View.VISIBLE);
+                            mLayoutPlayerSearchLabel.setVisibility(View.GONE);
+                        }
+                        mViewPager.setCurrentItem(tab.getPosition());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+            }
+            // Set up the ViewPager with the sections adapter.
+            mViewPager.setPagingEnabled(false);
+            mTabLayout.setVisibility(View.GONE);
+        }
 
     }
 
@@ -99,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        // Set the actions for searching username.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -131,53 +171,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if(position == 0){
-                return new LifeTimeFragment();
-            } else if(position == 1){
-                return new SoloFragment();
-            } else if(position == 2){
-                return new DuoFragment();
-            } else if(position == 3){
-                return new SquadFragment();
-            }
-
-            return new DefaultFragment();
-        }
-
-        @Override
-        public int getCount() {
-            // Show 4 total pages.
-            return 4;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "All";
-                case 1:
-                    return "Solo";
-                case 2:
-                    return "Duo";
-                case 3:
-                    return "Squad";
-            }
-            return null;
-        }
     }
 
     public void getPlayer(String playerName) {
@@ -229,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void enableTabsPaging(){
+        mViewPager.setVisibility(View.VISIBLE);
+        mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setPagingEnabled(true);
     }

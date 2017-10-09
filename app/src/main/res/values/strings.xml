@@ -5,4 +5,9 @@
     <string name="action_search">Enter search</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="search_hint">pubg username</string>
+    <string name="tab_lifetime">All</string>
+    <string name="tab_solo">Solo</string>
+    <string name="tab_duo">Duo</string>
+    <string name="tab_squad">Squad</string>
+    <string name="empty_search_label">Search for a player</string>
 </resources>
