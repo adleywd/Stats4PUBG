@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
+import br.com.adley.pubgstats.adapters.CustomViewPager;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
@@ -53,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
+    private TabLayout mTabLayout;
     private PBTService mService;
     private Player mPlayer;
     private LifetimeStats mLifetimeStats;
@@ -76,11 +79,12 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setPagingEnabled(false);
+        mTabLayout.setVisibility(View.GONE);
 
     }
 
@@ -195,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
                                     mDuoStats = mPlayer.getDuoStats();
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
+                                    enableTabsPaging();
                                 }
                             }
                         } else {
@@ -221,5 +226,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, "Username cannot be empty", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void enableTabsPaging(){
+        mTabLayout.setVisibility(View.VISIBLE);
+        mViewPager.setPagingEnabled(true);
     }
 }

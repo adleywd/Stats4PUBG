@@ -9,13 +9,13 @@ import br.com.adley.pubgstats.data.Stats;
  */
 
 public abstract class AbstractStats {
-    public int roundsPlayed;
-    public int kills;
-    public int wins;
-    public int top10s;
-    public int healsTotal;
-    public double avgDamagePerMatch;
-    public double kdAverage;
+    private int roundsPlayed;
+    private int kills;
+    private int wins;
+    private int top10s;
+    private int healsTotal;
+    private double avgDamagePerMatch;
+    private double kdAverage;
 
     public void setStats( List<Stats> statsList){
         for (Stats stats : statsList) {
@@ -79,5 +79,33 @@ public abstract class AbstractStats {
 
     public double getKdAverage() {
         return this.kdAverage;
+    }
+
+    public void setRoundsPlayed(int roundsPlayed) {
+        this.roundsPlayed = roundsPlayed;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void setTop10s(int top10s) {
+        this.top10s = top10s;
+    }
+
+    public void setHealsTotal(int healsTotal) {
+        this.healsTotal = healsTotal;
+    }
+
+    public void setAvgDamagePerMatch(double avgDamagePerMatch) {
+        this.avgDamagePerMatch = avgDamagePerMatch;
+    }
+
+    public void setKdAverage(double kdAverage) {
+        this.kdAverage = kdAverage;
     }
 }

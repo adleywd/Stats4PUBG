@@ -28,6 +28,6 @@ public class LifetimeStats extends AbstractStats {
         // TODO: implement getAvgDamagePerMatch for Lifetime. Currently we are summing everything.
 
         // Get the average of K/D
-        kdAverage = Utils.getKDAverage(kills, roundsPlayed, wins);
+        setKdAverage(Utils.getKDAverage(getKills(), getRoundsPlayed(), getWins()));
     }
 }
