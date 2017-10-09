@@ -5,6 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import br.com.adley.pubgstats.wrapper.DuoStats;
+import br.com.adley.pubgstats.wrapper.LifetimeStats;
+import br.com.adley.pubgstats.wrapper.SoloStats;
+import br.com.adley.pubgstats.wrapper.SquadStats;
+
 public class Player {
 
     @SerializedName("platformId")
@@ -47,6 +52,9 @@ public class Player {
     @Expose
     private String errorMessage;
 
+    private SoloStats soloStats;
+    private DuoStats duoStats;
+    private SquadStats squadStats;
     private LifetimeStats lifetimeStats;
 
     public int getPlatformId() {
@@ -136,6 +144,43 @@ public class Player {
     public String getErrorMessage() { return errorMessage; }
 
     public void setErrorMessage(String errorMessage) { this.errorMessage = errorMessage; }
+
+
+    public SoloStats getSoloStats(){
+        if(soloStats == null){
+            if(seasons != null){
+                soloStats = new SoloStats(seasons, selectedRegion);
+            }
+        }
+        return soloStats;
+    }
+    public void setSoloStats(SoloStats soloStats) {
+        this.soloStats = soloStats;
+    }
+
+    public DuoStats getDuoStats(){
+        if(duoStats == null){
+            if(seasons != null){
+                duoStats = new DuoStats(seasons, selectedRegion);
+            }
+        }
+        return duoStats;
+    }
+    public void setDuoStats(DuoStats duoStats) {
+        this.duoStats = duoStats;
+    }
+
+    public SquadStats getSquadStats(){
+        if(squadStats == null){
+            if(seasons != null){
+                squadStats = new SquadStats(seasons, selectedRegion);
+            }
+        }
+        return squadStats;
+    }
+    public void setSquadStats(SquadStats squadStats) {
+        this.squadStats = squadStats;
+    }
 
     public LifetimeStats getLifetimeStats() {
         if(lifetimeStats == null){

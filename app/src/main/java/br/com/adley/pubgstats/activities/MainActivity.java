@@ -18,7 +18,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
-import br.com.adley.pubgstats.data.LifetimeStats;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
@@ -30,6 +29,10 @@ import br.com.adley.pubgstats.fragments.LifeTimeFragment;
 import br.com.adley.pubgstats.fragments.SoloFragment;
 import br.com.adley.pubgstats.fragments.SquadFragment;
 import br.com.adley.pubgstats.library.Utils;
+import br.com.adley.pubgstats.wrapper.DuoStats;
+import br.com.adley.pubgstats.wrapper.LifetimeStats;
+import br.com.adley.pubgstats.wrapper.SoloStats;
+import br.com.adley.pubgstats.wrapper.SquadStats;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private PBTService mService;
     private Player mPlayer;
     private LifetimeStats mLifetimeStats;
+    private SoloStats mSoloStats;
+    private DuoStats mDuoStats;
+    private SquadStats mSquadStats;
     private List<Season> mSeasons;
     private List<Stats> mStats;
 
@@ -180,11 +186,15 @@ public class MainActivity extends AppCompatActivity {
                             if (response.body() != null) {
                                 mPlayer = response.body();
                                 // Validate if has error message.
-                                if (mPlayer != null && mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
+                                if (mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
                                     Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
                                 } else {
-                                    mSeasons = mPlayer != null ? mPlayer.getSeasons() : null;
-                                    mLifetimeStats = mPlayer != null ? mPlayer.getLifetimeStats() : null;
+                                    // Set objects with Player Data
+                                    mSeasons = mPlayer.getSeasons();
+                                    mSoloStats = mPlayer.getSoloStats();
+                                    mDuoStats = mPlayer.getDuoStats();
+                                    mSquadStats = mPlayer.getSquadStats();
+                                    mLifetimeStats = mPlayer.getLifetimeStats();
                                 }
                             }
                         } else {
@@ -193,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
-                        Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null? mPlayer.getPlayerName() : "Deu ruim",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null ? mPlayer.getPlayerName() : "Deu ruim",Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     }
