@@ -3,11 +3,12 @@
     <string name="api_url">https://pubgtracker.com/api/</string>
     <string name="empty_input_nickname">You must fill the nickname</string>
     <string name="action_search">Enter search</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="search_hint">pubg username</string>
+    <string name="hint_search">pubg username</string>
     <string name="tab_lifetime">All</string>
     <string name="tab_solo">Solo</string>
     <string name="tab_duo">Duo</string>
     <string name="tab_squad">Squad</string>
-    <string name="empty_search_label">Search for a player</string>
+    <string name="label_empty_search">Search for a player</string>
+    <string name="label_loading">Loading...</string>
+    <string name="label_player_not_found">Player not found</string>
 </resources>

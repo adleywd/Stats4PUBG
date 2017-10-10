@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private SquadStats mSquadStats;
     private List<Season> mSeasons;
     private List<Stats> mStats;
+    private LinearLayout mLoadingLayout;
+    private LinearLayout mPlayerNotFoundLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mLayoutPlayerSearchLabel = (LinearLayout) findViewById(R.id.layout_player_search_label);
+        mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
+        mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
 
         // Create custom tabs.
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -99,13 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        if(mPlayer == null){
-                            mViewPager.setVisibility(View.GONE);
-                            mLayoutPlayerSearchLabel.setVisibility(View.VISIBLE);
-                        } else {
-                          mViewPager.setVisibility(View.VISIBLE);
-                            mLayoutPlayerSearchLabel.setVisibility(View.GONE);
-                        }
                         mViewPager.setCurrentItem(tab.getPosition());
                     }
 
@@ -144,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 getPlayer(query);
                 Utils.closeKeyboard(MainActivity.this);
+                setLayoutVisibilitiesLoading();
                 return true;
             }
 
@@ -185,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                 // Validate if has error message.
                                 if (mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
                                     Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
+                                    setLayoutVisibilitiesUserNotFound();
                                 } else {
                                     // Set objects with Player Data
                                     mSeasons = mPlayer.getSeasons();
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                                     mDuoStats = mPlayer.getDuoStats();
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
-                                    enableTabsPaging();
+                                    setLayoutEnableContent();
                                 }
                             }
                         } else {
@@ -221,10 +220,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void enableTabsPaging(){
-        mViewPager.setVisibility(View.VISIBLE);
+    public void setLayoutEnableContent(){
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
+        mLoadingLayout.setVisibility(View.GONE);
+        mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.VISIBLE);
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setPagingEnabled(true);
     }
+
+    public void setLayoutVisibilitiesLoading(){
+        mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mLayoutPlayerSearchLabel.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.GONE);
+        mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mLoadingLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void setLayoutVisibilitiesUserNotFound(){
+        mViewPager.setVisibility(View.GONE); // Removes the content
+        mLayoutPlayerSearchLabel.setVisibility(View.GONE); // Remove layout with the label Search for a player.
+        mLoadingLayout.setVisibility(View.GONE); // Remove loading layout.
+        mTabLayout.setVisibility(View.GONE); // Remove tabs
+        mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
+        mPlayerNotFoundLayout.setVisibility(View.VISIBLE); // Show Player not found message
+    }
+
 }

@@ -24,9 +24,9 @@
 
         <gradient
             android:centerY="0.50"
-            android:startColor="@color/md_grey_700"
-            android:centerColor="@color/md_grey_500"
-            android:endColor="@color/md_black_1000"
+            android:startColor="@color/colorPrimary"
+            android:centerColor="@color/colorPrimary"
+            android:endColor="@color/md_white_1000"
             android:type="sweep"
             android:useLevel="false" />
     </shape>
