@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.adley.pubgstats.R;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mLoadingLayout;
     private LinearLayout mPlayerNotFoundLayout;
     private LinearLayout mErrorMainLayout;
+    private List<Fragment> mFragmentsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
         mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
         mErrorMainLayout = (LinearLayout) findViewById(R.id.error_main_layout);
+        mFragmentsList = new ArrayList<>();
 
         // Create custom tabs.
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -126,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
             mTabLayout.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        mFragmentsList.add(fragment);
     }
 
     @Override
@@ -195,13 +204,12 @@ public class MainActivity extends AppCompatActivity {
                                     mDuoStats = mPlayer.getDuoStats();
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
-                                    setLayoutEnableContent();
-                                    List<Fragment> allFragments = getSupportFragmentManager().getFragments();
-                                    for (Fragment fragment: allFragments) {
+                                    for (Fragment fragment: mFragmentsList) {
                                         if (fragment instanceof LifeTimeFragment){
                                             ((LifeTimeFragment) fragment).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
                                         }
                                     }
+                                    setLayoutEnableContent();
                                 }
                             }
                         } else {
