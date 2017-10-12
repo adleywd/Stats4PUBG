@@ -3,6 +3,7 @@ package br.com.adley.pubgstats.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
+import br.com.adley.pubgstats.fragments.LifeTimeFragment;
 import br.com.adley.pubgstats.library.Utils;
 import br.com.adley.pubgstats.wrapper.DuoStats;
 import br.com.adley.pubgstats.wrapper.LifetimeStats;
@@ -42,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private Player mPlayer;
     private LinearLayout mLayoutPlayerSearchLabel;
     private boolean mIsUserNotSearch = true;
-    private LifetimeStats mLifetimeStats;
-    private SoloStats mSoloStats;
-    private DuoStats mDuoStats;
-    private SquadStats mSquadStats;
+    public LifetimeStats mLifetimeStats;
+    public SoloStats mSoloStats;
+    public DuoStats mDuoStats;
+    public SquadStats mSquadStats;
     private List<Season> mSeasons;
     private List<Stats> mStats;
     private LinearLayout mLoadingLayout;
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                                 mPlayer = response.body();
                                 // Validate if has error message.
                                 if (mPlayer.getError() != null && !mPlayer.getError().isEmpty()) {
-                                    Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Player not found", Toast.LENGTH_SHORT).show();
                                     setLayoutVisibilitiesUserNotFound();
                                 } else {
                                     // Set objects with Player Data
@@ -194,6 +196,12 @@ public class MainActivity extends AppCompatActivity {
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
                                     setLayoutEnableContent();
+                                    List<Fragment> allFragments = getSupportFragmentManager().getFragments();
+                                    for (Fragment fragment: allFragments) {
+                                        if (fragment instanceof LifeTimeFragment){
+                                            ((LifeTimeFragment) fragment).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
+                                        }
+                                    }
                                 }
                             }
                         } else {
@@ -203,11 +211,12 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
-                        Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null ? mPlayer.getPlayerName() : "Not Work",Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         setErrorMainLayout();
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     }
+
+
                 }
 
                 @Override

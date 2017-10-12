@@ -12,4 +12,10 @@
     <string name="label_loading">Loading...</string>
     <string name="label_player_not_found">Player not found</string>
     <string name="error_main_layout_label">Something went wrong... :(</string>
+    <string name="label_matches_played">Matches Played</string>
+    <string name="label_wins">Wins</string>
+    <string name="label_top_10s">Top 10s</string>
+    <string name="label_kills">Kills</string>
+    <string name="label_kd">K/D</string>
+    <string name="label_heals">Heals</string>
 </resources>
