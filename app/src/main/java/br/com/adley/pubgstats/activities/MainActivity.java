@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Stats> mStats;
     private LinearLayout mLoadingLayout;
     private LinearLayout mPlayerNotFoundLayout;
+    private LinearLayout mErrorMainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mLayoutPlayerSearchLabel = (LinearLayout) findViewById(R.id.layout_player_search_label);
         mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
         mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
+        mErrorMainLayout = (LinearLayout) findViewById(R.id.error_main_layout);
 
         // Create custom tabs.
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -196,12 +198,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } else {
                             int statusCode = response.code();
+                            setErrorMainLayout();
                             Toast.makeText(MainActivity.this, "Error code: "+statusCode, Toast.LENGTH_LONG).show();
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
-                        Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null ? mPlayer.getPlayerName() : "Deu ruim",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, mPlayer.getPlayerName() != null ? mPlayer.getPlayerName() : "Not Work",Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
+                        setErrorMainLayout();
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -224,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);
         mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mErrorMainLayout.setVisibility(View.GONE);
         mViewPager.setVisibility(View.VISIBLE);
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setPagingEnabled(true);
@@ -234,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mViewPager.setVisibility(View.GONE);
         mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mErrorMainLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.VISIBLE);
     }
 
@@ -241,9 +247,19 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setVisibility(View.GONE); // Removes the content
         mLayoutPlayerSearchLabel.setVisibility(View.GONE); // Remove layout with the label Search for a player.
         mLoadingLayout.setVisibility(View.GONE); // Remove loading layout.
+        mErrorMainLayout.setVisibility(View.GONE); // Remove error layout
         mTabLayout.setVisibility(View.GONE); // Remove tabs
         mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.VISIBLE); // Show Player not found message
+    }
+
+    public void setErrorMainLayout(){
+        mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mLayoutPlayerSearchLabel.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.GONE);
+        mPlayerNotFoundLayout.setVisibility(View.GONE);
+        mLoadingLayout.setVisibility(View.GONE);
+        mErrorMainLayout.setVisibility(View.VISIBLE);
     }
 
 }

@@ -11,4 +11,5 @@
     <string name="label_empty_search">Search for a player</string>
     <string name="label_loading">Loading...</string>
     <string name="label_player_not_found">Player not found</string>
+    <string name="error_main_layout_label">Something went wrong... :(</string>
 </resources>
