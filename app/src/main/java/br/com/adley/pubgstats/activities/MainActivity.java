@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mViewPager.setVisibility(View.GONE);
+        mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mErrorMainLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.VISIBLE);
@@ -257,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mViewPager.setVisibility(View.GONE);
+        mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);
         mErrorMainLayout.setVisibility(View.VISIBLE);
