@@ -1,240 +1,257 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.adley.pubgstats.activities.MainActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view1"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/colorCardView"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fadeScrollbars="true"
+        android:overScrollMode="ifContentScrolls">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/ratingValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue"
-                android:layout_alignBottom="@+id/rankValue"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="39dp"
-                android:text="TextView" />
 
-            <TextView
-                android:id="@+id/rankValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/rankText"
-                android:layout_marginTop="17dp"
-                android:text="TextView" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view1"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/colorCardView"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
 
-            <TextView
-                android:id="@+id/matchesPlayed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue"
-                android:layout_alignBottom="@+id/rankValue"
-                android:layout_alignStart="@+id/matchesPlayedText"
-                android:layout_marginStart="25dp"
-                android:text="TextView" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/ratingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/ratingValue"
-                android:layout_below="@+id/ratingValue"
-                android:layout_marginTop="14dp"
-                android:text="RATING" />
+                    <TextView
+                        android:id="@+id/ratingValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue"
+                        android:layout_alignBottom="@+id/rankValue"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="39dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/rankText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/ratingText"
-                android:layout_alignBottom="@+id/ratingText"
-                android:layout_marginEnd="32dp"
-                android:layout_toStartOf="@+id/matchesPlayedText"
-                android:text="RANK" />
+                    <TextView
+                        android:id="@+id/rankValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/rankText"
+                        android:layout_marginTop="17dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/matchesPlayedText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankText"
-                android:layout_alignBottom="@+id/rankText"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="22dp"
-                android:text="MATCHES PLAYED" />
+                    <TextView
+                        android:id="@+id/matchesPlayed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue"
+                        android:layout_alignBottom="@+id/rankValue"
+                        android:layout_alignStart="@+id/matchesPlayedText"
+                        android:layout_marginStart="25dp"
+                        android:text="TextView" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/ratingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/ratingValue"
+                        android:layout_below="@+id/ratingValue"
+                        android:layout_marginTop="14dp"
+                        android:text="RATING" />
 
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/rankText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/ratingText"
+                        android:layout_alignBottom="@+id/ratingText"
+                        android:layout_marginEnd="32dp"
+                        android:layout_toStartOf="@+id/matchesPlayedText"
+                        android:text="RANK" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view2"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_below="@+id/card_view1"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/colorCardView"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp">
+                    <TextView
+                        android:id="@+id/matchesPlayedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankText"
+                        android:layout_alignBottom="@+id/rankText"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="22dp"
+                        android:text="MATCHES PLAYED" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                </RelativeLayout>
 
-            <TextView
-                android:id="@+id/ratingValue2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue2"
-                android:layout_alignBottom="@+id/rankValue2"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="39dp"
-                android:text="TextView" />
+            </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/rankValue2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/rankText2"
-                android:layout_marginTop="17dp"
-                android:text="TextView" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view2"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_below="@+id/card_view1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/colorCardView"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
 
-            <TextView
-                android:id="@+id/matchesPlayed2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue2"
-                android:layout_alignBottom="@+id/rankValue2"
-                android:layout_alignStart="@+id/matchesPlayedText2"
-                android:layout_marginStart="25dp"
-                android:text="TextView" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/ratingText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/ratingValue2"
-                android:layout_below="@+id/ratingValue2"
-                android:layout_marginTop="14dp"
-                android:text="RATING" />
+                    <TextView
+                        android:id="@+id/ratingValue2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue2"
+                        android:layout_alignBottom="@+id/rankValue2"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="39dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/rankText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/ratingText2"
-                android:layout_alignBottom="@+id/ratingText2"
-                android:layout_marginEnd="32dp"
-                android:layout_toStartOf="@+id/matchesPlayedText2"
-                android:text="RANK" />
+                    <TextView
+                        android:id="@+id/rankValue2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/rankText2"
+                        android:layout_marginTop="17dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/matchesPlayedText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankText2"
-                android:layout_alignBottom="@+id/rankText2"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="22dp"
-                android:text="MATCHES PLAYED" />
+                    <TextView
+                        android:id="@+id/matchesPlayed2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue2"
+                        android:layout_alignBottom="@+id/rankValue2"
+                        android:layout_alignStart="@+id/matchesPlayedText2"
+                        android:layout_marginStart="25dp"
+                        android:text="TextView" />
 
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/ratingText2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/ratingValue2"
+                        android:layout_below="@+id/ratingValue2"
+                        android:layout_marginTop="14dp"
+                        android:text="RATING" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view3"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_below="@+id/card_view2"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/colorCardView"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp">
+                    <TextView
+                        android:id="@+id/rankText2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/ratingText2"
+                        android:layout_alignBottom="@+id/ratingText2"
+                        android:layout_marginEnd="32dp"
+                        android:layout_toStartOf="@+id/matchesPlayedText2"
+                        android:text="RANK" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/matchesPlayedText2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankText2"
+                        android:layout_alignBottom="@+id/rankText2"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="22dp"
+                        android:text="MATCHES PLAYED" />
 
-            <TextView
-                android:id="@+id/ratingValue3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue3"
-                android:layout_alignBottom="@+id/rankValue3"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="39dp"
-                android:text="TextView" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/rankValue3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/rankText3"
-                android:layout_marginTop="17dp"
-                android:text="TextView" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view3"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_below="@+id/card_view2"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/colorCardView"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
 
-            <TextView
-                android:id="@+id/matchesPlayed3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankValue3"
-                android:layout_alignBottom="@+id/rankValue3"
-                android:layout_alignStart="@+id/matchesPlayedText3"
-                android:layout_marginStart="25dp"
-                android:text="TextView" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/ratingText3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/ratingValue3"
-                android:layout_below="@+id/ratingValue3"
-                android:layout_marginTop="14dp"
-                android:text="RATING" />
+                    <TextView
+                        android:id="@+id/ratingValue3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue3"
+                        android:layout_alignBottom="@+id/rankValue3"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="39dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/rankText3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/ratingText3"
-                android:layout_alignBottom="@+id/ratingText3"
-                android:layout_marginEnd="32dp"
-                android:layout_toStartOf="@+id/matchesPlayedText3"
-                android:text="RANK" />
+                    <TextView
+                        android:id="@+id/rankValue3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/rankText3"
+                        android:layout_marginTop="17dp"
+                        android:text="TextView" />
 
-            <TextView
-                android:id="@+id/matchesPlayedText3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/rankText3"
-                android:layout_alignBottom="@+id/rankText3"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="22dp"
-                android:text="MATCHES PLAYED" />
+                    <TextView
+                        android:id="@+id/matchesPlayed3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankValue3"
+                        android:layout_alignBottom="@+id/rankValue3"
+                        android:layout_alignStart="@+id/matchesPlayedText3"
+                        android:layout_marginStart="25dp"
+                        android:text="TextView" />
 
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/ratingText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/ratingValue3"
+                        android:layout_below="@+id/ratingValue3"
+                        android:layout_marginTop="14dp"
+                        android:text="RATING" />
+
+                    <TextView
+                        android:id="@+id/rankText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/ratingText3"
+                        android:layout_alignBottom="@+id/ratingText3"
+                        android:layout_marginEnd="32dp"
+                        android:layout_toStartOf="@+id/matchesPlayedText3"
+                        android:text="RANK" />
+
+                    <TextView
+                        android:id="@+id/matchesPlayedText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/rankText3"
+                        android:layout_alignBottom="@+id/rankText3"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="22dp"
+                        android:text="MATCHES PLAYED" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

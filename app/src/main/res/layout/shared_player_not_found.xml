@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_not_found_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:id="@+id/player_not_found_layout"
     android:visibility="visible">
 
     <ImageView
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_info_outline_white_24dp"/>
+        android:src="@drawable/ic_info_outline_white_24dp" />
 
     <TextView
-        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_player_not_found"
-        android:gravity="center"/>
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/label_player_not_found" />
 </LinearLayout>

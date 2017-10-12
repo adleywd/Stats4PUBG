@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/appbar"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <include
             android:id="@+id/player_not_found_layout"
@@ -79,7 +79,16 @@
             android:layout_height="match_parent"
             android:layout_below="@id/appbar"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/error_main_layout"
+            layout="@layout/shared_main_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appbar"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/layout_player_search_label"
