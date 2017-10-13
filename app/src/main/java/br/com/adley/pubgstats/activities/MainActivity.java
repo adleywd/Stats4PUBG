@@ -26,7 +26,10 @@ import br.com.adley.pubgstats.data.Season;
 import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
+import br.com.adley.pubgstats.fragments.DuoFragment;
 import br.com.adley.pubgstats.fragments.LifeTimeFragment;
+import br.com.adley.pubgstats.fragments.SoloFragment;
+import br.com.adley.pubgstats.fragments.SquadFragment;
 import br.com.adley.pubgstats.library.Utils;
 import br.com.adley.pubgstats.wrapper.DuoStats;
 import br.com.adley.pubgstats.wrapper.LifetimeStats;
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        buildFragmentList();
         mService = ApiUtils.getPBTService(getString(R.string.api_url));
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mViewPager = (CustomViewPager) findViewById(R.id.container);
@@ -70,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
         mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
         mErrorMainLayout = (LinearLayout) findViewById(R.id.error_main_layout);
-        mFragmentsList = new ArrayList<>();
 
         // Create custom tabs.
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -85,17 +87,17 @@ public class MainActivity extends AppCompatActivity {
         // Solo Stats Fragment
         View soloView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView soloTabText = soloView.findViewById(R.id.text_tab);
-        soloTabText .setText(getString(R.string.tab_solo));
+        soloTabText.setText(getString(R.string.tab_solo));
 
         // Duo Stats Fragment
         View duoView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView duoTabText = duoView.findViewById(R.id.text_tab);
-        duoTabText .setText(getString(R.string.tab_duo));
+        duoTabText.setText(getString(R.string.tab_duo));
 
         // Squad Stats Fragment
         View squadView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView squadTabText = squadView.findViewById(R.id.text_tab);
-        squadTabText .setText(getString(R.string.tab_squad));
+        squadTabText.setText(getString(R.string.tab_squad));
 
         if (mTabLayout != null) {
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(lifetimeView));
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(duoView));
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(squadView));
             mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
+            final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mFragmentsList);
             if (mViewPager != null) {
                 mViewPager.setAdapter(adapter);
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -111,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         mViewPager.setCurrentItem(tab.getPosition());
+                        if (tab.getPosition() == 0) {
+                            ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
+                        }
                     }
 
                     @Override
@@ -134,12 +139,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        mFragmentsList.add(fragment);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    private void buildFragmentList() {
+        mFragmentsList = new ArrayList<>();
+        mFragmentsList.add(new LifeTimeFragment());
+        mFragmentsList.add(new SoloFragment());
+        mFragmentsList.add(new DuoFragment());
+        mFragmentsList.add(new SquadFragment());
     }
 
     @Override
@@ -204,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
                                     mDuoStats = mPlayer.getDuoStats();
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
-                                    for (Fragment fragment: mFragmentsList) {
-                                        if (fragment instanceof LifeTimeFragment){
+                                    for (Fragment fragment : mFragmentsList) {
+                                        if (fragment instanceof LifeTimeFragment) {
                                             ((LifeTimeFragment) fragment).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
                                         }
                                     }
@@ -215,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             int statusCode = response.code();
                             setErrorMainLayout();
-                            Toast.makeText(MainActivity.this, "Error code: "+statusCode, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Error code: " + statusCode, Toast.LENGTH_LONG).show();
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
@@ -241,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setLayoutEnableContent(){
+    public void setLayoutEnableContent() {
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);
         mPlayerNotFoundLayout.setVisibility(View.GONE);
@@ -251,18 +264,17 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setPagingEnabled(true);
     }
 
-    public void setLayoutVisibilitiesLoading(){
-        mPlayerNotFoundLayout.setVisibility(View.GONE);
+    public void setLayoutVisibilitiesLoading() {
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
-        mViewPager.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.INVISIBLE);
         mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mErrorMainLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.VISIBLE);
     }
 
-    public void setLayoutVisibilitiesUserNotFound(){
-        mViewPager.setVisibility(View.GONE); // Removes the content
+    public void setLayoutVisibilitiesUserNotFound() {
+        mViewPager.setVisibility(View.INVISIBLE); // Removes the content
         mLayoutPlayerSearchLabel.setVisibility(View.GONE); // Remove layout with the label Search for a player.
         mLoadingLayout.setVisibility(View.GONE); // Remove loading layout.
         mErrorMainLayout.setVisibility(View.GONE); // Remove error layout
@@ -271,10 +283,10 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout.setVisibility(View.VISIBLE); // Show Player not found message
     }
 
-    public void setErrorMainLayout(){
+    public void setErrorMainLayout() {
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLayoutPlayerSearchLabel.setVisibility(View.GONE);
-        mViewPager.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.INVISIBLE);
         mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);

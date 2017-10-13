@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.List;
+
 import br.com.adley.pubgstats.fragments.DuoFragment;
 import br.com.adley.pubgstats.fragments.LifeTimeFragment;
 import br.com.adley.pubgstats.fragments.SoloFragment;
@@ -15,32 +17,20 @@ import br.com.adley.pubgstats.fragments.SquadFragment;
  */
 
 public class MainPageAdapter extends FragmentStatePagerAdapter {
-    private int mNumOfTabs;
+    private List<Fragment> mFragmentsList;
 
-    public MainPageAdapter(FragmentManager fm, int NumOfTabs) {
+    public MainPageAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+        this.mFragmentsList = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case 0:
-                return new LifeTimeFragment();
-            case 1:
-                return new SoloFragment();
-            case 2:
-                return new DuoFragment();
-            case 3:
-                return new SquadFragment();
-            default:
-                return null;
-        }
+        return mFragmentsList.get(position);
     }
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return mFragmentsList.size();
     }
 }
