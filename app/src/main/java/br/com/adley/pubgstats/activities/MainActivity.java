@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.adley.pubgstats.R;
 import br.com.adley.pubgstats.adapters.CustomViewPager;
@@ -30,6 +31,7 @@ import br.com.adley.pubgstats.fragments.DuoFragment;
 import br.com.adley.pubgstats.fragments.LifeTimeFragment;
 import br.com.adley.pubgstats.fragments.SoloFragment;
 import br.com.adley.pubgstats.fragments.SquadFragment;
+import br.com.adley.pubgstats.library.TabsEnum;
 import br.com.adley.pubgstats.library.Utils;
 import br.com.adley.pubgstats.wrapper.DuoStats;
 import br.com.adley.pubgstats.wrapper.LifetimeStats;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mPlayerNotFoundLayout;
     private LinearLayout mErrorMainLayout;
     private List<Fragment> mFragmentsList;
+    private TextView mSeasonRegionLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
         mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
         mErrorMainLayout = (LinearLayout) findViewById(R.id.error_main_layout);
+        mSeasonRegionLabel = (TextView) findViewById(R.id.seasonRegionLabel);
 
         // Create custom tabs.
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         //ImageView lifetime_tab_icon = (ImageView) favoritesView.findViewById(R.id.icon_tab);
         //lifetime_tab_icon.setImageResource(R.drawable.ic_favorite_white_24dp);
 
-        // Solo Stats Fragment
+        // SOLO Stats Fragment
         View soloView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView soloTabText = soloView.findViewById(R.id.text_tab);
         soloTabText.setText(getString(R.string.tab_solo));
@@ -113,8 +117,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         mViewPager.setCurrentItem(tab.getPosition());
-                        if (tab.getPosition() == 0) {
-                            ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
+                        if (tab.getPosition() == TabsEnum.ALL.getValue()) {
+                            ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getLifetimeStats());
+                        }
+                        if(tab.getPosition() == TabsEnum.SOLO.getValue()){
+                            ((SoloFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloStats());
+                        }
+                        if(tab.getPosition() == TabsEnum.DUO.getValue()){
+                            ((DuoFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoStats());
+                        }
+                        if(tab.getPosition() == TabsEnum.SQUAD.getValue()){
+                            ((SquadFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadStats());
                         }
                     }
 
@@ -202,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             mService.getPlayerStatsByNickname(playerName.trim()).enqueue(new Callback<Player>() {
                 @Override
                 public void onResponse(Call<Player> call, @NonNull Response<Player> response) {
-                    try {
+                    //try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 mPlayer = response.body();
@@ -219,9 +232,10 @@ public class MainActivity extends AppCompatActivity {
                                     mLifetimeStats = mPlayer.getLifetimeStats();
                                     for (Fragment fragment : mFragmentsList) {
                                         if (fragment instanceof LifeTimeFragment) {
-                                            ((LifeTimeFragment) fragment).bindLifeTimeStatsValues(mPlayer.getLifetimeStats());
+                                            ((LifeTimeFragment) fragment).bindStatsValues(mPlayer.getLifetimeStats());
                                         }
                                     }
+                                    mSeasonRegionLabel.setText(String.format(Locale.US,"%s - %s",mPlayer.getSeasonDisplay(), mPlayer.getSelectedRegion().toUpperCase()));
                                     setLayoutEnableContent();
                                 }
                             }
@@ -232,10 +246,11 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
-                    } catch (Exception e) {
+                    /*} catch (Exception e) {
                         setErrorMainLayout();
+                        Log.e("ERROR", e.getMessage());
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                    }
+                    }*/
 
 
                 }
@@ -262,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setVisibility(View.VISIBLE);
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setPagingEnabled(true);
+        mSeasonRegionLabel.setVisibility(View.VISIBLE);
     }
 
     public void setLayoutVisibilitiesLoading() {
@@ -271,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mErrorMainLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.VISIBLE);
+        mSeasonRegionLabel.setVisibility(View.GONE);
     }
 
     public void setLayoutVisibilitiesUserNotFound() {
@@ -281,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setVisibility(View.GONE); // Remove tabs
         mViewPager.setPagingEnabled(false); // Do not allow change tabs by swipe
         mPlayerNotFoundLayout.setVisibility(View.VISIBLE); // Show Player not found message
+        mSeasonRegionLabel.setVisibility(View.GONE);
     }
 
     public void setErrorMainLayout() {
@@ -291,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout.setVisibility(View.GONE);
         mLoadingLayout.setVisibility(View.GONE);
         mErrorMainLayout.setVisibility(View.VISIBLE);
+        mSeasonRegionLabel.setVisibility(View.GONE);
     }
 
 }

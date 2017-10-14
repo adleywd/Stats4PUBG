@@ -21,23 +21,23 @@ public abstract class AbstractStats {
         for (Stats stats : statsList) {
 
             switch (stats.getLabel()){
-                // Get All Matches Played
+                // Get ALL Matches Played
                 case "Rounds Played":
                     roundsPlayed += stats.getValueInt();
                     break;
-                // Get All Kills
+                // Get ALL Kills
                 case "Kills":
                     kills += stats.getValueInt();
                     break;
-                // Get All Wins
+                // Get ALL Wins
                 case "Wins":
                     wins += stats.getValueInt();
                     break;
-                // Get All Top 10s
+                // Get ALL Top 10s
                 case "Top 10s":
                     top10s += stats.getValueInt();
                     break;
-                // Get All Heals
+                // Get ALL Heals
                 case "Heals":
                     healsTotal += stats.getValueInt();
                     break;

@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.adley.pubgstats.R;
-import br.com.adley.pubgstats.wrapper.LifetimeStats;
+import br.com.adley.pubgstats.wrapper.AbstractStats;
 
 /**
  * Created by Adley.Damaceno on 06/10/2017.
  * Fragment with lifetime data.
  */
 
-public class LifeTimeFragment extends Fragment {
+public class LifeTimeFragment extends Fragment implements BindEventsInterface{
 
     private TextView mMatches;
     private TextView mWins;
@@ -48,12 +48,13 @@ public class LifeTimeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void bindLifeTimeStatsValues(LifetimeStats lifetimeStats){
-        mMatches.setText(String.valueOf(lifetimeStats.getRoundsPlayed()));
-        mWins.setText(String.valueOf(lifetimeStats.getWins()));
-        mTop10s.setText(String.valueOf(lifetimeStats.getTop10s()));
-        mKills.setText(String.valueOf(lifetimeStats.getKills()));
-        mKD.setText(String.format(java.util.Locale.US, "%.2f", lifetimeStats.getKdAverage()));
-        mHeals.setText(String.valueOf(lifetimeStats.getHealsTotal()));
+    @Override
+    public void bindStatsValues(AbstractStats abstractStats) {
+        mMatches.setText(String.valueOf(abstractStats.getRoundsPlayed()));
+        mWins.setText(String.valueOf(abstractStats.getWins()));
+        mTop10s.setText(String.valueOf(abstractStats.getTop10s()));
+        mKills.setText(String.valueOf(abstractStats.getKills()));
+        mKD.setText(String.format(java.util.Locale.US, "%.2f", abstractStats.getKdAverage()));
+        mHeals.setText(String.valueOf(abstractStats.getHealsTotal()));
     }
 }
