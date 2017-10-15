@@ -30,9 +30,12 @@ import br.com.adley.pubgstats.adapters.MainPageAdapter;
 import br.com.adley.pubgstats.data.Player;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
+import br.com.adley.pubgstats.fragments.DuoFppFragment;
 import br.com.adley.pubgstats.fragments.DuoFragment;
 import br.com.adley.pubgstats.fragments.LifeTimeFragment;
+import br.com.adley.pubgstats.fragments.SoloFppFragment;
 import br.com.adley.pubgstats.fragments.SoloFragment;
+import br.com.adley.pubgstats.fragments.SquadFppFragment;
 import br.com.adley.pubgstats.fragments.SquadFragment;
 import br.com.adley.pubgstats.library.TabsEnum;
 import br.com.adley.pubgstats.library.Utils;
@@ -135,12 +138,31 @@ public class MainActivity extends AppCompatActivity {
         TextView squadTabText = squadView.findViewById(R.id.text_tab);
         squadTabText.setText(getString(R.string.tab_squad));
 
+        // SOLO FPP Stats Fragment
+        View soloFppView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView soloFppTabText = soloFppView.findViewById(R.id.text_tab);
+        soloFppTabText.setText(getString(R.string.tab_solo_fpp));
+
+        // Duo FPP Stats Fragment
+        View duoFppView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView duoFppTabText = duoFppView .findViewById(R.id.text_tab);
+        duoFppTabText.setText(getString(R.string.tab_duo_fpp));
+
+        // Squad FPP Stats Fragment
+        View squadFppView = getLayoutInflater().inflate(R.layout.tab_main, null);
+        TextView squadFppTabText = squadFppView.findViewById(R.id.text_tab);
+        squadFppTabText.setText(getString(R.string.tab_squad_fpp));
+
         if (mTabLayout != null) {
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(lifetimeView));
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(soloView));
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(duoView));
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(squadView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(soloFppView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(duoFppView));
+            mTabLayout.addTab(mTabLayout.newTab().setCustomView(squadFppView));
             mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
             final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mFragmentsList);
             if (mViewPager != null) {
                 mViewPager.setAdapter(adapter);
@@ -148,19 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        mViewPager.setCurrentItem(tab.getPosition());
-                        if (tab.getPosition() == TabsEnum.ALL.getValue()) {
-                            ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getLifetimeStats());
-                        }
-                        if(tab.getPosition() == TabsEnum.SOLO.getValue()){
-                            ((SoloFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloStats());
-                        }
-                        if(tab.getPosition() == TabsEnum.DUO.getValue()){
-                            ((DuoFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoStats());
-                        }
-                        if(tab.getPosition() == TabsEnum.SQUAD.getValue()){
-                            ((SquadFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadStats());
-                        }
+                        setBindContantInTabs(tab, adapter);
                     }
 
                     @Override
@@ -198,6 +208,9 @@ public class MainActivity extends AppCompatActivity {
         mFragmentsList.add(new SoloFragment());
         mFragmentsList.add(new DuoFragment());
         mFragmentsList.add(new SquadFragment());
+        mFragmentsList.add(new SoloFppFragment());
+        mFragmentsList.add(new DuoFppFragment());
+        mFragmentsList.add(new SquadFppFragment());
     }
 
     @Override
@@ -269,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             mService.getPlayerStatsByNickname(playerName.trim()).enqueue(new Callback<Player>() {
                 @Override
                 public void onResponse(Call<Player> call, @NonNull Response<Player> response) {
-                    //try {
+                    try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 mPlayer = response.body();
@@ -296,6 +309,15 @@ public class MainActivity extends AppCompatActivity {
                                         if (fragment instanceof SquadFragment && fragment.getActivity() != null) {
                                             ((SquadFragment) fragment).bindStatsValues(mPlayer.getSquadStats());
                                         }
+                                        if (fragment instanceof SoloFppFragment && fragment.getActivity() != null) {
+                                            ((SoloFppFragment) fragment).bindStatsValues(mPlayer.getSoloFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SOLO FPP");
+                                        }
+                                        if (fragment instanceof DuoFppFragment && fragment.getActivity() != null) {
+                                            ((DuoFppFragment) fragment).bindStatsValues(mPlayer.getDuoFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "DUO FPP");
+                                        }
+                                        if (fragment instanceof SquadFppFragment && fragment.getActivity() != null) {
+                                            ((SquadFppFragment) fragment).bindStatsValues(mPlayer.getSquadFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SQUAD FPP");
+                                        }
                                     }
                                     mSeasonRegionLabel.setText(String.format(Locale.US,"%s - %s",mPlayer.getSeasonDisplay(), mPlayer.getSelectedRegion().toUpperCase()));
                                     setLayoutEnableContent();
@@ -308,11 +330,11 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, String.valueOf(statusCode));
                         }
 
-                    /*} catch (Exception e) {
+                    } catch (Exception e) {
                         setErrorMainLayout();
                         Log.e("ERROR", e.getMessage());
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                    }*/
+                    }
 
 
                 }
@@ -328,6 +350,31 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(MainActivity.this, "Username cannot be empty", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setBindContantInTabs(TabLayout.Tab tab, MainPageAdapter adapter){
+        mViewPager.setCurrentItem(tab.getPosition());
+        if (tab.getPosition() == TabsEnum.ALL.getValue()) {
+            ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getLifetimeStats());
+        }
+        else if(tab.getPosition() == TabsEnum.SOLO.getValue()){
+            ((SoloFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloStats());
+        }
+        else if(tab.getPosition() == TabsEnum.DUO.getValue()){
+            ((DuoFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoStats());
+        }
+        else if(tab.getPosition() == TabsEnum.SQUAD.getValue()){
+            ((SquadFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadStats());
+        }
+        else if(tab.getPosition() == TabsEnum.SOLOFPP.getValue()){
+            ((SoloFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SOLO FPP");
+        }
+        else if(tab.getPosition() == TabsEnum.DUOFPP.getValue()){
+            ((DuoFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "DUO FPP");
+        }
+        else if(tab.getPosition() == TabsEnum.SQUADFPP.getValue()){
+            ((SquadFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SQUAD FPP");
         }
     }
 

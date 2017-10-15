@@ -10,4 +10,5 @@ import br.com.adley.pubgstats.wrapper.AbstractStats;
 interface BindEventsInterface {
 
     void bindStatsValues(AbstractStats abstractStats);
+    void bindStatsValues(AbstractStats abstractStats, String selectedRegion, String fppType);
 }

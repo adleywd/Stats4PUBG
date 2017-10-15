@@ -56,4 +56,9 @@ public class SquadFragment extends Fragment implements BindEventsInterface{
         mKD.setText(String.format(java.util.Locale.US, "%.2f", abstractStats.getKdAverage()));
         mHeals.setText(String.valueOf(abstractStats.getHealsTotal()));
     }
+
+    @Override
+    public void bindStatsValues(AbstractStats abstractStats, String selectedRegion, String fppType) {
+        throw new UnsupportedOperationException();
+    }
 }

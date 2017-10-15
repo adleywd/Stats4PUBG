@@ -16,9 +16,11 @@ public abstract class AbstractStats {
     private int healsTotal;
     private double avgDamagePerMatch;
     private double kdAverage;
+    private List<Stats> mStatsList;
 
     public void setStats( List<Stats> statsList){
-        for (Stats stats : statsList) {
+        mStatsList = statsList;
+        for (Stats stats : mStatsList) {
 
             switch (stats.getLabel()){
                 // Get ALL Matches Played
@@ -107,5 +109,9 @@ public abstract class AbstractStats {
 
     public void setKdAverage(double kdAverage) {
         this.kdAverage = kdAverage;
+    }
+
+    public List<Stats> getStatsList() {
+        return mStatsList;
     }
 }

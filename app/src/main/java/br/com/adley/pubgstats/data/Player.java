@@ -5,9 +5,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import br.com.adley.pubgstats.wrapper.DuoFppStats;
 import br.com.adley.pubgstats.wrapper.DuoStats;
 import br.com.adley.pubgstats.wrapper.LifetimeStats;
+import br.com.adley.pubgstats.wrapper.SoloFppStats;
 import br.com.adley.pubgstats.wrapper.SoloStats;
+import br.com.adley.pubgstats.wrapper.SquadFppStats;
 import br.com.adley.pubgstats.wrapper.SquadStats;
 
 public class Player {
@@ -52,10 +55,13 @@ public class Player {
     @Expose
     private String errorMessage;
 
-    private SoloStats soloStats;
-    private DuoStats duoStats;
-    private SquadStats squadStats;
-    private LifetimeStats lifetimeStats;
+    private SoloStats mSoloStats;
+    private DuoStats mDuoStats;
+    private SquadStats mSquadStats;
+    private LifetimeStats mLifetimeStats;
+    private SoloFppStats mSoloFppStats;
+    private DuoFppStats mDuoFppStats;
+    private SquadFppStats mSquadFppStats;
 
     public int getPlatformId() {
         return platformId;
@@ -147,51 +153,65 @@ public class Player {
 
 
     public SoloStats getSoloStats(){
-        if(soloStats == null){
+        if(mSoloStats == null){
             if(seasons != null){
-                soloStats = new SoloStats(seasons, selectedRegion);
+                mSoloStats = new SoloStats(seasons, selectedRegion);
             }
         }
-        return soloStats;
-    }
-    public void setSoloStats(SoloStats soloStats) {
-        this.soloStats = soloStats;
+        return mSoloStats;
     }
 
     public DuoStats getDuoStats(){
-        if(duoStats == null){
+        if(mDuoStats == null){
             if(seasons != null){
-                duoStats = new DuoStats(seasons, selectedRegion);
+                mDuoStats = new DuoStats(seasons, selectedRegion);
             }
         }
-        return duoStats;
-    }
-    public void setDuoStats(DuoStats duoStats) {
-        this.duoStats = duoStats;
+        return mDuoStats;
     }
 
     public SquadStats getSquadStats(){
-        if(squadStats == null){
+        if(mSquadStats == null){
             if(seasons != null){
-                squadStats = new SquadStats(seasons, selectedRegion);
+                mSquadStats = new SquadStats(seasons, selectedRegion);
             }
         }
-        return squadStats;
-    }
-    public void setSquadStats(SquadStats squadStats) {
-        this.squadStats = squadStats;
+        return mSquadStats;
     }
 
     public LifetimeStats getLifetimeStats() {
-        if(lifetimeStats == null){
+        if(mLifetimeStats == null){
             if(seasons != null){
-                lifetimeStats = new LifetimeStats(seasons);
+                mLifetimeStats = new LifetimeStats(seasons);
             }
         }
-        return lifetimeStats;
+        return mLifetimeStats;
     }
 
-    public void setLifetimeStats(LifetimeStats lifetimeStats) {
-        this.lifetimeStats = lifetimeStats;
+    public SoloFppStats getSoloFppStats() {
+        if(mSoloFppStats == null){
+            if(seasons != null){
+                mSoloFppStats = new SoloFppStats(seasons, selectedRegion);
+            }
+        }
+        return mSoloFppStats;
+    }
+
+    public DuoFppStats getDuoFppStats() {
+        if(mDuoFppStats == null){
+            if(seasons != null){
+                mDuoFppStats = new DuoFppStats(seasons, selectedRegion);
+            }
+        }
+        return mDuoFppStats;
+    }
+
+    public SquadFppStats getSquadFppStats() {
+        if(mSquadFppStats == null){
+            if(seasons != null){
+                mSquadFppStats = new SquadFppStats(seasons, selectedRegion);
+            }
+        }
+        return mSquadFppStats;
     }
 }

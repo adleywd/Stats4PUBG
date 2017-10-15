@@ -6,7 +6,7 @@ package br.com.adley.pubgstats.library;
  */
 
 public enum TabsEnum {
-    ALL(0), SOLO(1), DUO(2), SQUAD(3);
+    ALL(0), SOLO(1), DUO(2), SQUAD(3), SOLOFPP(4), DUOFPP(5), SQUADFPP(6);
 
     private final int value;
     TabsEnum(int i) {
