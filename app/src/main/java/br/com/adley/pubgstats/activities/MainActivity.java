@@ -284,8 +284,17 @@ public class MainActivity extends AppCompatActivity {
                                     mSquadStats = mPlayer.getSquadStats();
                                     mLifetimeStats = mPlayer.getLifetimeStats();
                                     for (Fragment fragment : mFragmentsList) {
-                                        if (fragment instanceof LifeTimeFragment) {
+                                        if (fragment instanceof LifeTimeFragment && fragment.getActivity() != null) {
                                             ((LifeTimeFragment) fragment).bindStatsValues(mPlayer.getLifetimeStats());
+                                        }
+                                        if (fragment instanceof SoloFragment && fragment.getActivity() != null) {
+                                            ((SoloFragment) fragment).bindStatsValues(mPlayer.getSoloStats());
+                                        }
+                                        if (fragment instanceof DuoFragment && fragment.getActivity() != null) {
+                                            ((DuoFragment) fragment).bindStatsValues(mPlayer.getDuoStats());
+                                        }
+                                        if (fragment instanceof SquadFragment && fragment.getActivity() != null) {
+                                            ((SquadFragment) fragment).bindStatsValues(mPlayer.getSquadStats());
                                         }
                                     }
                                     mSeasonRegionLabel.setText(String.format(Locale.US,"%s - %s",mPlayer.getSeasonDisplay(), mPlayer.getSelectedRegion().toUpperCase()));
