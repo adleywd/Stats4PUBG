@@ -15,6 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,8 +28,6 @@ import br.com.adley.pubgstats.R;
 import br.com.adley.pubgstats.adapters.CustomViewPager;
 import br.com.adley.pubgstats.adapters.MainPageAdapter;
 import br.com.adley.pubgstats.data.Player;
-import br.com.adley.pubgstats.data.Season;
-import br.com.adley.pubgstats.data.Stats;
 import br.com.adley.pubgstats.data.remote.ApiUtils;
 import br.com.adley.pubgstats.data.remote.PBTService;
 import br.com.adley.pubgstats.fragments.DuoFragment;
@@ -49,37 +52,66 @@ public class MainActivity extends AppCompatActivity {
     private PBTService mService;
     private Player mPlayer;
     private LinearLayout mLayoutPlayerSearchLabel;
-    private boolean mIsUserNotSearch = true;
     public LifetimeStats mLifetimeStats;
     public SoloStats mSoloStats;
     public DuoStats mDuoStats;
     public SquadStats mSquadStats;
-    private List<Season> mSeasons;
-    private List<Stats> mStats;
     private LinearLayout mLoadingLayout;
     private LinearLayout mPlayerNotFoundLayout;
     private LinearLayout mErrorMainLayout;
     private List<Fragment> mFragmentsList;
     private TextView mSeasonRegionLabel;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        //AdMob Config
+        // Initialize the Mobile Ads SDK.
+        MobileAds.initialize(this, getString(R.string.ads_app_id));
+
+        // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
+        // values/strings.xml.
+        mAdView = findViewById(R.id.ad_view_main);
+
+        // Create an ad request. Check your logcat output for the hashed device ID to
+        // get test ads on a physical device. e.g.
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                mAdView.setVisibility(View.GONE);
+            }
+        });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         buildFragmentList();
         mService = ApiUtils.getPBTService(getString(R.string.api_url));
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mViewPager = (CustomViewPager) findViewById(R.id.container);
-        mLayoutPlayerSearchLabel = (LinearLayout) findViewById(R.id.layout_player_search_label);
-        mLoadingLayout = (LinearLayout) findViewById(R.id.loading_main);
-        mPlayerNotFoundLayout = (LinearLayout) findViewById(R.id.player_not_found_layout);
-        mErrorMainLayout = (LinearLayout) findViewById(R.id.error_main_layout);
-        mSeasonRegionLabel = (TextView) findViewById(R.id.seasonRegionLabel);
+        mTabLayout = findViewById(R.id.tabs);
+        mViewPager = findViewById(R.id.container);
+        mLayoutPlayerSearchLabel = findViewById(R.id.layout_player_search_label);
+        mLoadingLayout = findViewById(R.id.loading_main);
+        mPlayerNotFoundLayout = findViewById(R.id.player_not_found_layout);
+        mErrorMainLayout = findViewById(R.id.error_main_layout);
+        mSeasonRegionLabel = findViewById(R.id.seasonRegionLabel);
 
         // Create custom tabs.
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout = findViewById(R.id.tabs);
         // Set lifetime fragment.
         View lifetimeView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView lifetimeTabText = lifetimeView.findViewById(R.id.text_tab);
@@ -194,6 +226,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        // Resume the AdView.
+        super.onResume();
+        mAdView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        // Pause the AdView.
+        super.onPause();
+        mAdView.pause();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        // Destroy the AdView.
+        super.onDestroy();
+        mAdView.destroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -225,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
                                     setLayoutVisibilitiesUserNotFound();
                                 } else {
                                     // Set objects with Player Data
-                                    mSeasons = mPlayer.getSeasons();
                                     mSoloStats = mPlayer.getSoloStats();
                                     mDuoStats = mPlayer.getDuoStats();
                                     mSquadStats = mPlayer.getSquadStats();

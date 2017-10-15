@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,110 +13,125 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/appbar_padding_top"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ad_view_main">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/appbar_padding_top"
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-            </android.support.v7.widget.Toolbar>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="220dp">
-
-                <ImageView
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/img_background" />
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                </android.support.v7.widget.Toolbar>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/img_background" />
+
+                    <TextView
+                        android:id="@+id/seasonRegionLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/transparent"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/transparent"
+                        app:tabBackground="@color/transparent"
+                        app:tabIndicatorColor="@color/colorPrimary"
+                        app:tabSelectedTextColor="@color/md_white_1000"
+                        app:tabTextColor="@color/md_white_1000" />
+
+                </RelativeLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <br.com.adley.pubgstats.adapters.CustomViewPager
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar"
+                android:visibility="gone"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+            <include
+                android:id="@+id/loading_main"
+                layout="@layout/shared_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/player_not_found_layout"
+                layout="@layout/shared_player_not_found"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/error_main_layout"
+                layout="@layout/shared_main_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layout_player_search_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbar"
+                android:gravity="center">
 
                 <TextView
-                    android:id="@+id/seasonRegionLabel"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/transparent"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center"
+                    android:text="@string/label_empty_search"
+                    android:textSize="30sp" />
+            </LinearLayout>
+        </RelativeLayout>
 
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/transparent"
-                    app:tabBackground="@color/transparent"
-                    app:tabIndicatorColor="@color/colorPrimary"
-                    app:tabSelectedTextColor="@color/md_white_1000"
-                    app:tabTextColor="@color/md_white_1000" />
-
-            </RelativeLayout>
-
-        </android.support.design.widget.AppBarLayout>
-
-        <br.com.adley.pubgstats.adapters.CustomViewPager
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:visibility="gone"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-        <include
-            android:id="@+id/loading_main"
-            layout="@layout/shared_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <include
-            android:id="@+id/player_not_found_layout"
-            layout="@layout/shared_player_not_found"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <include
-            android:id="@+id/error_main_layout"
-            layout="@layout/shared_main_error"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/layout_player_search_label"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/label_empty_search"
-                android:textSize="30sp" />
-        </LinearLayout>
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/ad_view_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/ads_banner_main_id"/>
 
     </RelativeLayout>
 
