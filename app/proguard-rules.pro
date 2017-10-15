@@ -8,3 +8,4 @@
 -dontwarn retrofit2.Platform$Java8
 -dontwarn okhttp3.**
 -dontwarn okio.**
+-keep class android.support.v7.widget.SearchView { *; }
