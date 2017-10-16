@@ -1,5 +1,4 @@
 # Add project specific ProGuard rules here.
-## TODO STILL NO WORKING ##
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);
@@ -34,10 +33,8 @@
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class br.com.adley.ipubg.data.models.MatchHistory.** { *; }
--keep class br.com.adley.ipubg.data.models.Player.** { *; }
--keep class br.com.adley.ipubg.data.models.Season.** { *; }
--keep class br.com.adley.ipubg.data.models.Stats.** { *; }
+-keep class br.com.adley.ipubg.data.** { *; }
+-keep class br.com.adley.ipubg.wrapper.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
