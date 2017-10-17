@@ -15,5 +15,5 @@
         android:orderInCategory="101"
         android:title="@string/label_about"
         android:icon="@drawable/ic_info_outline_black_24dp"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
