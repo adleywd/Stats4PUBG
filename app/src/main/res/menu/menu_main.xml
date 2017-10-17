@@ -9,4 +9,11 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/ic_search_black_24dp" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="101"
+        android:title="@string/label_about"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        app:showAsAction="ifRoom" />
 </menu>

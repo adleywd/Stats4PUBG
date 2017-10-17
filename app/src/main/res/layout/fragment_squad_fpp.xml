@@ -16,6 +16,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
+        android:scrollbarStyle="outsideInset"
         android:textSize="26sp"
         android:visibility="gone" />
 

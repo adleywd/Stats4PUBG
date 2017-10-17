@@ -13,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fadeScrollbars="true"
-        android:overScrollMode="ifContentScrolls">
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarStyle="outsideInset">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,9 +39,9 @@
                         android:id="@+id/matchesPlayedLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
                         android:layout_marginStart="10dp"
                         android:gravity="center"
-                        android:layout_alignParentStart="true"
                         android:orientation="vertical">
 
                         <TextView
@@ -82,8 +83,8 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="40dp"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="40dp"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -123,9 +124,9 @@
                         android:id="@+id/killsLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
                         android:layout_marginStart="40dp"
                         android:gravity="center"
-                        android:layout_alignParentStart="true"
                         android:orientation="vertical">
 
                         <TextView
@@ -167,8 +168,8 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="50dp"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="50dp"
                         android:gravity="center"
                         android:orientation="vertical">
 

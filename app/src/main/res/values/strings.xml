@@ -24,4 +24,6 @@
     <string name="label_kd">K/D</string>
     <string name="label_heals">Heals</string>
     <string name="msg_region_without_fpp">The %1$s region does not contain %2$s</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="label_about">About</string>
 </resources>

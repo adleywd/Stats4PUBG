@@ -1,5 +1,6 @@
 package br.com.adley.ipubg.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -266,7 +267,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            return super.onOptionsItemSelected(item);
+            return true;
+        } else if (id == R.id.action_about){
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

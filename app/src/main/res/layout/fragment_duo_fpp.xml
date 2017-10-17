@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:fadeScrollbars="true"
         android:overScrollMode="ifContentScrolls"
+        android:scrollbarStyle="outsideInset"
         android:visibility="gone">
 
         <LinearLayout
