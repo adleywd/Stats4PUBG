@@ -4,7 +4,6 @@ import java.util.List;
 
 import br.com.adley.ipubg.data.models.Season;
 import br.com.adley.ipubg.data.models.Stats;
-import br.com.adley.ipubg.library.Utils;
 
 /**
  * Created by Gabriel Lundgren on 08/10/2017.
@@ -27,7 +26,5 @@ public class LifetimeStats extends AbstractStats {
         }
         // TODO: implement getAvgDamagePerMatch for Lifetime. Currently we are summing everything.
 
-        // Get the average of K/D
-        setKdAverage(Utils.getKDAverage(getKills(), getRoundsPlayed(), getWins()));
     }
 }

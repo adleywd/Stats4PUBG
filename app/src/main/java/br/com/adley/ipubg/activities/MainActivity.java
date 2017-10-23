@@ -71,37 +71,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //AdMob Config
-        // Initialize the Mobile Ads SDK.
-        MobileAds.initialize(this, getString(R.string.ads_app_id));
-
-        // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
-        // values/strings.xml.
-        mAdView = findViewById(R.id.ad_view_main);
-
-        // Create an ad request. Check your logcat output for the hashed device ID to
-        // get test ads on a physical device. e.g.
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        // Start loading the ad in the background.
-        mAdView.loadAd(adRequest);
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                mAdView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                mAdView.setVisibility(View.GONE);
-            }
-        });
-
+        setUpAds();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         buildFragmentList();
@@ -113,9 +83,14 @@ public class MainActivity extends AppCompatActivity {
         mPlayerNotFoundLayout = findViewById(R.id.player_not_found_layout);
         mErrorMainLayout = findViewById(R.id.error_main_layout);
         mSeasonRegionLabel = findViewById(R.id.seasonRegionLabel);
-
-        // Create custom tabs.
         mTabLayout = findViewById(R.id.tabs);
+        setUpTabs();
+        setUpViewPagerContent();
+
+    }
+
+    private void setUpTabs() {
+        /// Create custom tabs. ///
         // Set lifetime fragment.
         View lifetimeView = getLayoutInflater().inflate(R.layout.tab_main, null);
         TextView lifetimeTabText = lifetimeView.findViewById(R.id.text_tab);
@@ -146,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Duo FPP Stats Fragment
         View duoFppView = getLayoutInflater().inflate(R.layout.tab_main, null);
-        TextView duoFppTabText = duoFppView .findViewById(R.id.text_tab);
+        TextView duoFppTabText = duoFppView.findViewById(R.id.text_tab);
         duoFppTabText.setText(getString(R.string.tab_duo_fpp));
 
         // Squad FPP Stats Fragment
@@ -164,32 +139,66 @@ public class MainActivity extends AppCompatActivity {
             mTabLayout.addTab(mTabLayout.newTab().setCustomView(squadFppView));
             mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mFragmentsList);
-            if (mViewPager != null) {
-                mViewPager.setAdapter(adapter);
-                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-                mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        setBindContantInTabs(tab, adapter);
-                    }
-
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-
-                    }
-
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
-
-                    }
-                });
-            }
-            // Set up the ViewPager with the sections adapter.
-            mViewPager.setPagingEnabled(false);
             mTabLayout.setVisibility(View.GONE);
         }
+    }
 
+    private void setUpViewPagerContent() {
+        final MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), mFragmentsList);
+        if (mViewPager != null) {
+            mViewPager.setAdapter(adapter);
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+            mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setBindContantInTabs(tab, adapter);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+            // Set up the ViewPager with the sections adapter.
+            mViewPager.setPagingEnabled(false);
+        }
+    }
+
+    private void setUpAds() {
+        //AdMob Config
+        // Initialize the Mobile Ads SDK.
+        MobileAds.initialize(this, getString(R.string.ads_app_id));
+
+        // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
+        // values/strings.xml.
+        mAdView = findViewById(R.id.ad_view_main);
+
+        // Create an ad request. Check your logcat output for the hashed device ID to
+        // get test ads on a physical device. e.g.
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                mAdView.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -267,8 +276,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            return true;
-        } else if (id == R.id.action_about){
+            return false;
+        } else if (id == R.id.action_about) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutIntent);
             return true;
@@ -324,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                                             ((SquadFppFragment) fragment).bindStatsValues(mPlayer.getSquadFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SQUAD FPP");
                                         }
                                     }
-                                    mSeasonRegionLabel.setText(String.format(Locale.US,"%s - %s",mPlayer.getSeasonDisplay(), mPlayer.getSelectedRegion().toUpperCase()));
+                                    mSeasonRegionLabel.setText(String.format(Locale.US, "%s - %s", mPlayer.getSeasonDisplay(), mPlayer.getSelectedRegion().toUpperCase()));
                                     setLayoutEnableContent();
                                 }
                             }
@@ -358,27 +367,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setBindContantInTabs(TabLayout.Tab tab, MainPageAdapter adapter){
+    private void setBindContantInTabs(TabLayout.Tab tab, MainPageAdapter adapter) {
         mViewPager.setCurrentItem(tab.getPosition());
         if (tab.getPosition() == TabsEnum.ALL.getValue()) {
             ((LifeTimeFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getLifetimeStats());
-        }
-        else if(tab.getPosition() == TabsEnum.SOLO.getValue()){
+        } else if (tab.getPosition() == TabsEnum.SOLO.getValue()) {
             ((SoloFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloStats());
-        }
-        else if(tab.getPosition() == TabsEnum.DUO.getValue()){
+        } else if (tab.getPosition() == TabsEnum.DUO.getValue()) {
             ((DuoFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoStats());
-        }
-        else if(tab.getPosition() == TabsEnum.SQUAD.getValue()){
+        } else if (tab.getPosition() == TabsEnum.SQUAD.getValue()) {
             ((SquadFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadStats());
-        }
-        else if(tab.getPosition() == TabsEnum.SOLOFPP.getValue()){
+        } else if (tab.getPosition() == TabsEnum.SOLOFPP.getValue()) {
             ((SoloFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSoloFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SOLO FPP");
-        }
-        else if(tab.getPosition() == TabsEnum.DUOFPP.getValue()){
+        } else if (tab.getPosition() == TabsEnum.DUOFPP.getValue()) {
             ((DuoFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getDuoFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "DUO FPP");
-        }
-        else if(tab.getPosition() == TabsEnum.SQUADFPP.getValue()){
+        } else if (tab.getPosition() == TabsEnum.SQUADFPP.getValue()) {
             ((SquadFppFragment) adapter.getItem(tab.getPosition())).bindStatsValues(mPlayer.getSquadFppStats(), mPlayer.getSelectedRegion().toUpperCase(), "SQUAD FPP");
         }
     }

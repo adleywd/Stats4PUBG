@@ -64,6 +64,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:background="@color/transparent"
+                        android:overScrollMode="never"
                         app:tabBackground="@color/transparent"
                         app:tabContentStart="60dp"
                         app:tabIndicatorColor="@color/colorPrimary"

@@ -3,19 +3,20 @@ package br.com.adley.ipubg.wrapper;
 import java.util.List;
 
 import br.com.adley.ipubg.data.models.Stats;
+import br.com.adley.ipubg.library.Utils;
 
 /**
  * Created by Gabriel Lundgren on 08/10/2017.
  */
 
 public abstract class AbstractStats {
-    private int roundsPlayed;
-    private int kills;
-    private int wins;
-    private int top10s;
-    private int healsTotal;
-    private double avgDamagePerMatch;
-    private double kdAverage;
+    private int mRoundsPlayed;
+    private int mKills;
+    private int mWins;
+    private int mTop10s;
+    private int mHealsTotal;
+    private double mAvgDamagePerMatch;
+    private double mKdAverage;
     private List<Stats> mStatsList;
 
     public void setStats( List<Stats> statsList){
@@ -25,90 +26,91 @@ public abstract class AbstractStats {
             switch (stats.getLabel()){
                 // Get ALL Matches Played
                 case "Rounds Played":
-                    roundsPlayed += stats.getValueInt();
+                    mRoundsPlayed += stats.getValueInt();
                     break;
                 // Get ALL Kills
                 case "Kills":
-                    kills += stats.getValueInt();
+                    mKills += stats.getValueInt();
                     break;
                 // Get ALL Wins
                 case "Wins":
-                    wins += stats.getValueInt();
+                    mWins += stats.getValueInt();
                     break;
                 // Get ALL Top 10s
                 case "Top 10s":
-                    top10s += stats.getValueInt();
+                    mTop10s += stats.getValueInt();
                     break;
                 // Get ALL Heals
                 case "Heals":
-                    healsTotal += stats.getValueInt();
+                    mHealsTotal += stats.getValueInt();
                     break;
                 // Get Average Damage Per Match
                 case "Avg Dmg per Match":
-                    avgDamagePerMatch += stats.getValueDec();
+                    mAvgDamagePerMatch += stats.getValueDec();
                     break;
                 // Get K/D Ratio
                 case "K/D Ratio":
-                    kdAverage += stats.getValueDec();
+                    mKdAverage += stats.getValueDec();
                     break;
             }
         }
+        mKdAverage = Utils.getKDAverage(mKills, mRoundsPlayed, mWins);
     }
 
     public int getRoundsPlayed() {
-        return this.roundsPlayed;
+        return this.mRoundsPlayed;
     }
 
     public int getKills() {
-        return this.kills;
+        return this.mKills;
     }
 
     public int getWins() {
-        return this.wins;
+        return this.mWins;
     }
 
     public int getTop10s() {
-        return this.top10s;
+        return this.mTop10s;
     }
 
     public int getHealsTotal() {
-        return this.healsTotal;
+        return this.mHealsTotal;
     }
 
     public double getAvgDamagePerMatch(){
-        return this.avgDamagePerMatch;
+        return this.mAvgDamagePerMatch;
     }
 
     public double getKdAverage() {
-        return this.kdAverage;
+        return this.mKdAverage;
     }
 
     public void setRoundsPlayed(int roundsPlayed) {
-        this.roundsPlayed = roundsPlayed;
+        this.mRoundsPlayed = roundsPlayed;
     }
 
     public void setKills(int kills) {
-        this.kills = kills;
+        this.mKills = kills;
     }
 
     public void setWins(int wins) {
-        this.wins = wins;
+        this.mWins = wins;
     }
 
     public void setTop10s(int top10s) {
-        this.top10s = top10s;
+        this.mTop10s = top10s;
     }
 
     public void setHealsTotal(int healsTotal) {
-        this.healsTotal = healsTotal;
+        this.mHealsTotal = healsTotal;
     }
 
     public void setAvgDamagePerMatch(double avgDamagePerMatch) {
-        this.avgDamagePerMatch = avgDamagePerMatch;
+        this.mAvgDamagePerMatch = avgDamagePerMatch;
     }
 
     public void setKdAverage(double kdAverage) {
-        this.kdAverage = kdAverage;
+        this.mKdAverage = kdAverage;
     }
 
     public List<Stats> getStatsList() {
