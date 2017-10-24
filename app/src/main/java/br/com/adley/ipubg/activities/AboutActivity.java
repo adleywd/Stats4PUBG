@@ -1,8 +1,8 @@
 package br.com.adley.ipubg.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,8 +23,11 @@ public class AboutActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "E-mail us.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent Email = new Intent(Intent.ACTION_SEND);
+                Email.setType("text/email");
+                Email.putExtra(Intent.EXTRA_EMAIL,
+                        new String[]{"ipubgapp@gmail.com"});  //developer 's email
+                startActivity(Intent.createChooser(Email, getString(R.string.email_label_feedback)));
             }
         });
 

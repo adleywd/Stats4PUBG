@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclaimer_pubg">
+        "Disclaimer:\n\n"
+
+        "PUBG TRACKER\n\n"
+        "This app use a the service of PUBGTracker to retrieve all players data's.\n"
+        "The API is maintained and provided by https://pubgtracker.com\n\n"
+
+        "PLAYERUNKNOWN'S BATTLEGROUND\n\n"
+
+        "COPYRIGHT ©2017 BLUEHOLE INC. ALL RIGHTS RESERVED.\n"
+        "PLAYERUNKNOWN'S BATTLEGROUNDS is a registered trademark of Bluehole, Inc. and its affiliates.\n"
+    </string>
+</resources>

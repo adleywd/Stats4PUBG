@@ -26,4 +26,5 @@
     <string name="msg_region_without_fpp">The %1$s region does not contain %2$s</string>
     <string name="title_activity_about">About App</string>
     <string name="label_about">About</string>
+    <string name="email_label_feedback">Send us a Feedback:</string>
 </resources>
