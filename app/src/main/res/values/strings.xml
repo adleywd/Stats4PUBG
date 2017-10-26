@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IPUBG-Stats</string>
+    <string name="app_name">Stats4PUBG</string>
     <string name="api_url">https://pubgtracker.com/api/</string>
     <string name="ads_app_id">ca-app-pub-2734623074888943~6876026740</string>
     <string name="ads_banner_main_id"> ca-app-pub-2734623074888943/2910885097</string>
@@ -27,4 +27,5 @@
     <string name="title_activity_about">About App</string>
     <string name="label_about">About</string>
     <string name="email_label_feedback">Send us a Feedback:</string>
+    <string name="email_contact">stats4pubg@gmail.com</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.adley.ipubg">
+    package="br.com.adley.stats4pubg">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name="br.com.adley.stats4pubg.activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -25,13 +25,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AboutActivity"
+            android:name="br.com.adley.stats4pubg.activities.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName="br.com.adley.stats4pubg.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.adley.ipubg.activities.MainActivity" />
+                android:value="br.com.adley.stats4pubg.activities.MainActivity" />
         </activity>
     </application>
 
