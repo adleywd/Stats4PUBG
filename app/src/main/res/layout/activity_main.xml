@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="br.com.adley.ipubg.activities.MainActivity">
+    tools:context="br.com.adley.stats4pubg.activities.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,11 +37,11 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="220dp">
+                    android:layout_height="200dp">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="220dp"
+                        android:layout_height="200dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/img_background"
                         android:contentDescription="@string/app_name" />
@@ -75,7 +75,7 @@
 
             </android.support.design.widget.AppBarLayout>
 
-            <br.com.adley.ipubg.adapters.CustomViewPager
+            <br.com.adley.stats4pubg.adapters.CustomViewPager
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
