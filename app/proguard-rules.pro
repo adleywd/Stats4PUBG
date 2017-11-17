@@ -33,8 +33,8 @@
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
--keep class br.com.adley.ipubg.data.** { *; }
--keep class br.com.adley.ipubg.wrapper.** { *; }
+-keep class br.com.adley.stats4pubg.data.** { *; }
+-keep class br.com.adley.stats4pubg.wrapper.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
